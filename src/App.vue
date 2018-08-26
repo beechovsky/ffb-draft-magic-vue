@@ -3,10 +3,10 @@
     <div class="bannerContainer">
       <img src="./assets/ffb-banner.jpg">
       <div class="centered">
-        <h1><b>FFB DraftMagic by Jeff Bucklew</b></h1>
+        <h1><b>FFB DraftMagic by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></b></h1>
         <h2><i>Inspired by the far superior <a href="https://jayzheng.com/ff/" target="_blank">Jay Zheng's Draft Aid</a>.</i></h2>
         <h3>Steps to draft wizardry:</h3>
-        <h3>Download a custom rankings CSV from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
+        <h3>Download a custom rankings CSV (NOT a cheatsheet) from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
         <h3>Upload it below.</h3>
         <h3>Click on a player to remove them from Rankings as they are drafted.</h3>
         <h3>If you clicked by accident, click that player on the Drafted table to return them to the Rankings table.</h3>
