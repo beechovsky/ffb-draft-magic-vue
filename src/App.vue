@@ -44,7 +44,7 @@
               <td v-for="colHeader in columnHeaders" style="background-color: #f5f5f5;">{{ colHeader }}</td>
             </tr>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in this.rankings" @click="hideRow(row, index, true)" class="clickable">
+            <tr v-for="(row, index) in mergeSort(this.rankings).splice(1, this.rankings.length)" @click="hideRow(row, index, true)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, colCount)">{{ columnData }}</td>
             </tr>
@@ -60,12 +60,13 @@
         <table class="posTable">
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in rbList" @click="hideRow(row, index, false)" class="clickable">
+            <tr v-for="(row, index) in mergeSort(rbList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
+        <br>
         <th>
           <tr class="orange">
             Quarter Backs
@@ -74,7 +75,7 @@
         <table class="posTable">
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in qbList" @click="hideRow(row, index, false)" class="clickable">
+            <tr v-for="(row, index) in mergeSort(qbList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
@@ -90,12 +91,13 @@
         <table class="posTable">
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in wrList" @click="hideRow(row, index, false)" class="clickable">
+            <tr v-for="(row, index) in mergeSort(wrList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
+        <br>
         <th>
           <tr class="orange">
             Tight Ends
@@ -104,7 +106,7 @@
         <table class="posTable">
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in teList" @click="hideRow(row, index, false)" class="clickable">
+            <tr v-for="(row, index) in mergeSort(teList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
@@ -121,7 +123,6 @@
           <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in this.drafted" @click="putBack(row, index)" class="clickable">
-              <!-- <td>{{index + 1}}</td> -->
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
             </tr>
@@ -145,10 +146,10 @@ export default {
     search: ''
   }),
   computed: {
-    // NOTE: search needs work
+    // TODO: search needs work
     searchList () {
       return this.rankings.filter(player => {
-        return player.toLowerCase().includes(this.search.toLowerCase().replace(/^\s+$/, ''))
+        return player.toLowerCase().includes(this.search.toLowerCase())
       })
     },
     rbList () {
@@ -191,22 +192,25 @@ export default {
   methods: {
     setRows (rows) {
       for (var player in rows) {
+        // async list equivalence op
         this.rankings.splice(rows.indexOf(player), 0, rows[player])
       }
 
-      let headerString = this.rankings[this.rankings.length - 1]
+      let headerString = this.rankings[this.rankings.length - 1] // headers magically at the bottom...
       this.columnHeaders = headerString.split(',')
       this.columnHeaders.splice(1, 1) // remove WISD column
       this.columnHeaders.splice(1, 1, 'Name') // rename FFB's dumb column name 'Overall'
       this.colCount = this.columnHeaders.length
     },
     hideRow (row, index, fromRanks) {
+      // from the main table
       if (fromRanks === true) {
         this.drafted.splice(0, 0, row)
         this.rankings.splice(index, 1)
       } else {
+        // from positional tables - indexes differ so look for a match
         this.rankings.filter((player, index) => {
-          if (row.split(',')[1] === player.split(',')[1]) {
+          if (row.split(',')[0] === player.split(',')[0]) {
             this.drafted.splice(0, 0, row)
             this.rankings.splice(index, 1)
           }
@@ -214,20 +218,39 @@ export default {
       }
     },
     putBack (row, index) {
-      for (var i = 0; i < this.rankings.length - 1; i++) {
-        let player = this.rankings[i]
-        if (row.split(',')[0] < player.split(',')[0]) {
-          this.rankings.splice(0, 0, row)
-          this.drafted.splice(index, 1)
-          break
+      // tables are sorted, so no need for intelligence here
+      this.rankings.splice(0, 0, row)
+      this.drafted.splice(index, 1)
+    },
+    mergeSort (arr) {
+      if (arr.length < 2) {
+        return arr
+      }
+
+      let middle = parseInt(arr.length / 2)
+      let left = arr.slice(0, middle)
+      let right = arr.slice(middle, arr.length)
+
+      return this.merge(this.mergeSort(left), this.mergeSort(right))
+    },
+    merge (left, right) {
+      let result = []
+
+      while (left.length && right.length) {
+        // .split(',')[0] = player rank
+        if (parseInt(left[0].split(',')[0]) <= parseInt(right[0].split(',')[0])) {
+          result.push(left.shift())
         } else {
-          let diff = parseInt(row.split(',')[0], 10) - parseInt(player.split(',')[0], 10)
-          let newIndex = i + diff
-          this.rankings.splice(newIndex, 0, row)
-          this.drafted.splice(index, 1)
-          break
+          result.push(right.shift())
         }
       }
+      while (left.length) {
+        result.push(left.shift())
+      }
+      while (right.length) {
+        result.push(right.shift())
+      }
+      return result
     }
   },
   components: {
@@ -243,6 +266,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
 }
+/* TODO: investigate grid for top of page */
 .bannerContainer {
     position: relative;
     text-align: center;
@@ -261,12 +285,8 @@ export default {
 .container {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-around;
-  align-items: baseline;
-  /* align-content: space-around; */
-}
-table {
-  width: 100%;
+  justify-content: space-evenly;
+  /* align-items: baseline; */
 }
 table, td {
   border: 1px solid black;
@@ -295,18 +315,15 @@ tr:hover {
   height:1000px;
 }
 .rankings {
-  flex: 2 1 25;
-  /* display:block;
-  overflow:auto; */
-  /* height:1000px; */
+  flex: 2 0 25;
 }
 .rbs {
-  flex: 1 1 15;
+  flex: 1 0 15;
 }
 .wrs {
-  flex: 1 1 15;
+  flex: 1 0 15;
 }
 .drafted {
-  flex: 1 1 10;
+  flex: 1 0 10;
 }
 </style>
