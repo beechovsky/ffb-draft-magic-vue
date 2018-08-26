@@ -36,7 +36,7 @@
               <td v-for="colHeader in columnHeaders" style="background-color: #f5f5f5;">{{ colHeader }}</td>
             </tr>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in this.rankings" @click="hideRow(this.rankings, row, index)" class="clickable">
+            <tr v-for="(row, index) in this.rankings" @click="hideRow(row, index, true)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, colCount)">{{ columnData }}</td>
             </tr>
@@ -53,7 +53,7 @@
         <table class="scrollTable">
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in rbList" @click="hideRow(rbList, row, index)" class="clickable">
+            <tr v-for="(row, index) in rbList" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
@@ -68,7 +68,7 @@
         <table class="scrollTable">
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in qbList" @click="hideRow(qbList, row, index)" class="clickable">
+            <tr v-for="(row, index) in qbList" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
@@ -85,7 +85,7 @@
         <table class="scrollTable">
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in wrList" @click="hideRow(wrList, row, index)" class="clickable">
+            <tr v-for="(row, index) in wrList" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
@@ -100,7 +100,7 @@
         <table class="scrollTable">
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in teList" @click="hideRow(teList, row, index)" class="clickable">
+            <tr v-for="(row, index) in teList" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
@@ -117,8 +117,8 @@
         <table>
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in this.drafted" @click="putBack(index)" class="clickable">
-              <td>{{index + 1}}</td>
+            <tr v-for="(row, index) in this.drafted" @click="putBack(row, index)" class="clickable">
+              <!-- <td>{{index + 1}}</td> -->
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
             </tr>
@@ -193,25 +193,6 @@ export default {
     setRows (rows) {
       for (var player in rows) {
         this.rankings.splice(rows.indexOf(player), 0, rows[player])
-        // if (player.split(',')[3].includes('RB')) {
-        //   // this.runningBacks.push(player)
-        //   this.runningBacks.splice(tableRows.indexOf(player), 0, tableRows[player])
-        // }
-        //
-        // if (player.split(',')[3].includes('WR')) {
-        //   // this.wideReceivers.push(player)
-        //   this.wideReceivers.splice(tableRows.indexOf(player), 0, tableRows[player])
-        // }
-        //
-        // if (player.split(',')[3].includes('QB')) {
-        //   // this.quarterBacks.push(player)
-        //   this.quarterBacks.splice(tableRows.indexOf(player), 0, tableRows[player])
-        // }
-        //
-        // if (player.split(',')[3].includes('TE')) {
-        //   // this.tightEnds.push(player)
-        //   this.tightEnds.splice(tableRows.indexOf(player), 0, tableRows[player])
-        // }
       }
 
       let headerString = this.rankings[this.rankings.length - 1]
@@ -220,28 +201,34 @@ export default {
       this.columnHeaders.splice(1, 1, 'Name') // rename FFB's dumb column name 'Overall'
       this.colCount = this.columnHeaders.length
     },
-    hideRow (rows, row, index) {
-      this.drafted.splice(index, 0, rows[index])
-      this.rankings.splice(index, 1)
-      // if (rows === this.rankings) {
-      //   console.log('HIDING FROM RANKINGS')
-      //   this.rankings.splice(index, 1)
-      // } else {
-      //   console.log('HIDING FROM POS LIST')
-      //   rows.splice(index, 1)
-      //   this.rankings.filter((player, index) => {
-      //     if (row.split(',')[1] === player.split(',')[1]) {
-      //       console.log('INDEX: ' + index)
-      //       console.log('PLAYER TO REMOVE: ' + row.split(',')[1] + ':' + player.split(',')[1])
-      //       this.rankings.splice(index, 1)
-      //     }
-      //   })
-      // }
+    hideRow (row, index, fromRanks) {
+      if (fromRanks === true) {
+        this.drafted.splice(0, 0, row)
+        this.rankings.splice(index, 1)
+      } else {
+        this.rankings.filter((player, index) => {
+          if (row.split(',')[1] === player.split(',')[1]) {
+            this.drafted.splice(0, 0, row)
+            this.rankings.splice(index, 1)
+          }
+        })
+      }
     },
-    putBack (index) { // TODO: If we add position tables, this needs to be smart enought to replace the player in the correct table
-      // TODO: play wth adding at the correct index - requires a counter/length op
-      this.rankings.splice(index, 0, this.drafted[index])
-      this.drafted.splice(index, 1)
+    putBack (row, index) {
+      for (var i = 0; i < this.rankings.length - 1; i++) {
+        let player = this.rankings[i]
+        if (row.split(',')[0] < player.split(',')[0]) {
+          this.rankings.splice(0, 0, row)
+          this.drafted.splice(index, 1)
+          break
+        } else {
+          let diff = parseInt(row.split(',')[0], 10) - parseInt(player.split(',')[0], 10)
+          let newIndex = i + diff
+          this.rankings.splice(newIndex, 0, row)
+          this.drafted.splice(index, 1)
+          break
+        }
+      }
     }
   },
   components: {
