@@ -16,20 +16,28 @@
     <upload @load="setRows" id="uploadButton"></upload>
     <br>
     <br>
-    <!-- TODO: wrap these tables in a grid container -->
     <div class="container">
       <div v-if="this.rankings.length > 0" class="rankings">
-        <!-- TODO: Search needs work - removing based on original index -->
-        <!-- <div class="search-wrapper">
-          <label>Search Rankings:</label>
-        <input type="text" v-model="search" placeholder="Player Name"/>
+        <!-- TODO: Search needs work -->
+        <!-- <div v-if="this.rankings.length > 0">
+          <div class="search-wrapper">
+            <label>Search Rankings:</label>
+            <input type="text" v-model="search" placeholder="Player Name"/>
+          </div>
+          <div v-if="searchList.length > 0"> -->
+            <!-- eslint-disable-next-line -->
+            <!-- <tr v-for="(row, index) in searchList" @click="hideRow(row, index, false)" class="clickable"> -->
+              <!-- eslint-disable-next-line -->
+              <!-- <td v-for="columnData in row.split(',').splice(0, colCount)">{{ columnData }}</td>
+            </tr>
+          </div>
         </div> -->
         <th>
           <tr class="orange">
             Rankings
           </tr>
         </th>
-        <table>
+        <table class="rankingsTable">
           <tbody>
             <tr>
               <!-- eslint-disable-next-line -->
@@ -40,7 +48,6 @@
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, colCount)">{{ columnData }}</td>
             </tr>
-            <!-- NOTE: Also, why the fuck do the headers end up on the bottom? -->
           </tbody>
         </table>
       </div>
@@ -50,14 +57,13 @@
             Running Backs
           </tr>
         </th>
-        <table class="scrollTable">
+        <table class="posTable">
           <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in rbList" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
-            <!-- NOTE: Also, why the fuck do the headers end up on the bottom? -->
           </tbody>
         </table>
         <th>
@@ -65,14 +71,13 @@
             Quarter Backs
           </tr>
         </th>
-        <table class="scrollTable">
+        <table class="posTable">
           <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in qbList" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
-            <!-- NOTE: Also, why the fuck do the headers end up on the bottom? -->
           </tbody>
         </table>
       </div>
@@ -82,14 +87,13 @@
             Wide Receivers
           </tr>
         </th>
-        <table class="scrollTable">
+        <table class="posTable">
           <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in wrList" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
-            <!-- NOTE: Also, why the fuck do the headers end up on the bottom? -->
           </tbody>
         </table>
         <th>
@@ -97,14 +101,13 @@
             Tight Ends
           </tr>
         </th>
-        <table class="scrollTable">
+        <table class="posTable">
           <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in teList" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
               <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
             </tr>
-            <!-- NOTE: Also, why the fuck do the headers end up on the bottom? -->
           </tbody>
         </table>
       </div>
@@ -136,22 +139,18 @@ export default {
   name: 'app',
   data: () => ({
     rankings: [],
-    // runningBacks: [],
-    // wideReceivers: [],
-    // quarterBacks: [],
-    // tightEnds: [],
     drafted: [],
     columnHeaders: [],
-    colCount: 0
-    // search: '', // needs work
+    colCount: 0,
+    search: ''
   }),
   computed: {
-    // NOTE: this is for search, and needs work
-    // filteredList () {
-    //   return this.rankings.filter(player => {
-    //     return player.toLowerCase().includes(this.search.toLowerCase())
-    //   })
-    // },
+    // NOTE: search needs work
+    searchList () {
+      return this.rankings.filter(player => {
+        return player.toLowerCase().includes(this.search.toLowerCase().replace(/^\s+$/, ''))
+      })
+    },
     rbList () {
       let rbs = []
       this.rankings.filter(player => {
@@ -285,16 +284,21 @@ td {
 tr:hover {
   background-color: #f5f5f5;
 }
-.scrollTable {
+.posTable {
   display:block;
   overflow:auto;
   height:300px;
 }
-.rankings {
-  flex: 2 1 25;
+.rankingsTable {
   display:block;
   overflow:auto;
   height:1000px;
+}
+.rankings {
+  flex: 2 1 25;
+  /* display:block;
+  overflow:auto; */
+  /* height:1000px; */
 }
 .rbs {
   flex: 1 1 15;
