@@ -62,7 +62,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(rbList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -77,7 +77,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(qbList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -93,7 +93,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(wrList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -108,7 +108,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(teList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(0, 4)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -287,13 +287,16 @@ export default {
   flex-flow: row wrap;
   justify-content: space-evenly;
   /* align-items: baseline; */
+  /* resize: vertical; */
+  /* overflow: hidden; */
+  /* margin: 2em; */
 }
 table, td {
   border: 1px solid black;
   border-collapse: collapse;
 }
 td {
-  padding: 2px 4px 2px 4px;
+  padding: 1px 2px 1px 2px;
 }
 .orange {
   text-align: left;
@@ -315,7 +318,7 @@ tr:hover {
   height:1000px;
 }
 .rankings {
-  flex: 2 0 25;
+  flex: 2 0 20;
 }
 .rbs {
   flex: 1 0 15;
