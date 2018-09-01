@@ -1,48 +1,57 @@
 <template>
   <div id="app">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <div class="bannerContainer">
       <img src="./assets/ffb-banner.jpg">
       <div class="centered">
         <h1><b>FFB DraftMagic by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></b></h1>
-        <h2><i>Inspired by the far superior <a href="https://jayzheng.com/ff/" target="_blank">Jay Zheng's Draft Aid</a>.</i></h2>
+        <h2><i>Inspired by <a href="https://jayzheng.com/ff/" target="_blank">Jay Zheng's Draft Aid</a>.</i></h2>
         <h3>Steps to draft wizardry:</h3>
         <h3>Download a custom rankings CSV (NOT a cheatsheet) from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
         <h3>Upload it below.</h3>
         <h3>Click on a player to remove them from Rankings as they are drafted.</h3>
-        <h3>If you clicked by accident, click that player on the Drafted table to return them to the Rankings table.</h3>
+        <h3>If you clicked by accident, click that player on the Drafted table to return them.</h3>
       </div>
     </div>
     <br>
     <upload @load="setRows" id="uploadButton"></upload>
     <br>
     <br>
-    <div class="container">
-      <div v-if="this.rankings.length > 0" class="rankings">
-        <!-- TODO: Search needs work -->
-        <!-- <div v-if="this.rankings.length > 0">
-          <div class="search-wrapper">
-            <label>Search Rankings:</label>
-            <input type="text" v-model="search" placeholder="Player Name"/>
-          </div>
-          <div v-if="searchList.length > 0"> -->
+    <div class="search">
+      <div v-if="this.rankings.length > 0">
+        <div class="orange">
+          <label><b>Search Rankings:</b></label>
+          <input type="text" v-model="search" placeholder="Player Name"/>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="search searchResults">
+      <table>
+        <tbody>
+          <!-- eslint-disable-next-line -->
+          <tr v-for="(row, index) in searchList" @click="hideRow(row, index, false)" class="clickable">
             <!-- eslint-disable-next-line -->
-            <!-- <tr v-for="(row, index) in searchList" @click="hideRow(row, index, false)" class="clickable"> -->
-              <!-- eslint-disable-next-line -->
-              <!-- <td v-for="columnData in row.split(',').splice(0, colCount)">{{ columnData }}</td>
-            </tr>
-          </div>
-        </div> -->
+            <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="parent">
+      <div v-if="this.rankings.length > 0" class="child rankings">
         <th>
           <tr class="orange">
             Rankings
           </tr>
         </th>
         <table class="rankingsTable">
-          <tbody>
+          <thead>
             <tr>
               <!-- eslint-disable-next-line -->
               <td v-for="colHeader in columnHeaders" style="background-color: #f5f5f5;">{{ colHeader }}</td>
             </tr>
+          </thead>
+          <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(this.rankings).splice(1, this.rankings.length)" @click="hideRow(row, index, true)" class="clickable">
               <!-- eslint-disable-next-line -->
@@ -51,7 +60,7 @@
           </tbody>
         </table>
       </div>
-      <div v-if="this.rankings.length > 0" class="rbs">
+      <div v-if="this.rankings.length > 0" class="child rbs">
         <th>
           <tr class="orange">
             Running Backs
@@ -82,7 +91,7 @@
           </tbody>
         </table>
       </div>
-      <div v-if="this.rankings.length > 0" class="wrs">
+      <div v-if="this.rankings.length > 0" class="child wrs">
         <th>
           <tr class="orange">
             Wide Receivers
@@ -113,7 +122,7 @@
           </tbody>
         </table>
       </div>
-      <div v-if="this.rankings.length > 0" class="drafted">
+      <div v-if="this.drafted.length > 0" class="child drafted">
         <th>
           <tr class="orange">
             Drafted
@@ -124,7 +133,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in this.drafted" @click="putBack(row, index)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(1, 2)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -146,11 +155,12 @@ export default {
     search: ''
   }),
   computed: {
-    // TODO: search needs work
     searchList () {
-      return this.rankings.filter(player => {
-        return player.toLowerCase().includes(this.search.toLowerCase())
-      })
+      if (this.search.length > 3) { // hacky way of keeping results table from displaying persistently and limiting the size of the results eventually displayed
+        return this.rankings.filter(player => {
+          return player.toLowerCase().includes(this.search.toLowerCase())
+        })
+      }
     },
     rbList () {
       let rbs = []
@@ -192,7 +202,6 @@ export default {
   methods: {
     setRows (rows) {
       for (var player in rows) {
-        // async list equivalence op
         this.rankings.splice(rows.indexOf(player), 0, rows[player])
       }
 
@@ -216,6 +225,8 @@ export default {
           }
         })
       }
+
+      this.search = ''
     },
     putBack (row, index) {
       // tables are sorted, so no need for intelligence here
@@ -237,7 +248,6 @@ export default {
       let result = []
 
       while (left.length && right.length) {
-        // .split(',')[0] = player rank
         if (parseInt(left[0].split(',')[0]) <= parseInt(right[0].split(',')[0])) {
           result.push(left.shift())
         } else {
@@ -266,67 +276,82 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
 }
+* {
+  box-sizing: border-box;
+}
 /* TODO: investigate grid for top of page */
 .bannerContainer {
-    position: relative;
-    text-align: center;
-    color: white;
-    width: 100%;
+  position: relative;
+  text-align: center;
+  color: white;
+  width: 100%;
 }
 .centered {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .clickable {
   cursor: pointer;
 }
-.container {
+/* flex */
+.parent {
   display: flex;
-  flex-flow: row wrap;
+  flex: wrap;
   justify-content: space-evenly;
-  /* align-items: baseline; */
-  /* resize: vertical; */
-  /* overflow: hidden; */
-  /* margin: 2em; */
 }
-table, td {
-  border: 1px solid black;
-  border-collapse: collapse;
+.child {
+  margin: .5%;
 }
-td {
-  padding: 1px 2px 1px 2px;
+.child rankings {
+  flex: 2 2 auto;
+  min-width: 40%;
+}
+.child rbs {
+  flex: 1; /* equivalent of flex: 1 1 auto */
+  min-width: 20%;
+}
+.child wrs {
+  flex: 1;
+  min-width: 20%;
+}
+.child drafted {
+  flex: 1;
+  min-width: 20%;
 }
 .orange {
-  text-align: left;
   border: none;
   padding: 0 0 0 5px;
   color: orange;
-}
-tr:hover {
-  background-color: #f5f5f5;
-}
-.posTable {
-  display:block;
-  overflow:auto;
-  height:300px;
 }
 .rankingsTable {
   display:block;
   overflow:auto;
   height:1000px;
 }
-.rankings {
-  flex: 2 0 20;
+.posTable {
+  display:block;
+  overflow:auto;
+  height:300px;
 }
-.rbs {
-  flex: 1 0 15;
+.search {
+  /* display: grid;
+  /* grid-template-rows: auto; */
+  /* grid-template-columns: 1fr; */
+
+  display: flex;
+  justify-content: center;
+
 }
-.wrs {
-  flex: 1 0 15;
+table, td {
+  border-collapse: collapse;
 }
-.drafted {
-  flex: 1 0 10;
+td {
+  border: 1px solid black;
+  padding: 1px 2px 1px 2px;
+}
+tr:hover {
+  background-color: #f5f5f5;
 }
 </style>
