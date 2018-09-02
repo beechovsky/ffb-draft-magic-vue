@@ -1,18 +1,19 @@
 <template>
   <div id="app">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <div class="bannerContainer">
-      <img src="./assets/ffb-banner.jpg">
-      <div class="centered">
+    <section class="hero">
+      <header class="hero-header">
+        <br>
         <h1><b>FFB DraftMagic by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></b></h1>
-        <h2><i>Inspired by <a href="https://jayzheng.com/ff/" target="_blank">Jay Zheng's Draft Aid</a>.</i></h2>
+        <h3><i>Inspired by <a href="https://jayzheng.com/ff/" target="_blank">Jay Zheng's Draft Aid</a></i></h3>
         <h3>Steps to draft wizardry:</h3>
-        <h3>Download a custom rankings CSV (NOT a cheatsheet) from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
+        <h3>Download a custom rankings CSV (<i>NOT</i> a cheatsheet) from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
         <h3>Upload it below.</h3>
         <h3>Click on a player to remove them from Rankings as they are drafted.</h3>
         <h3>If you clicked by accident, click that player on the Drafted table to return them.</h3>
-      </div>
-    </div>
+        <br>
+      </header>
+    </section>
     <br>
     <upload @load="setRows" id="uploadButton"></upload>
     <br>
@@ -208,7 +209,7 @@ export default {
       let headerString = this.rankings[this.rankings.length - 1] // headers magically at the bottom...
       this.columnHeaders = headerString.split(',')
       this.columnHeaders.splice(1, 1) // remove WISD column
-      this.columnHeaders.splice(1, 1, 'Name') // rename FFB's dumb column name 'Overall'
+      this.columnHeaders.splice(1, 1, 'Name') // rename FP's dumb column name 'Overall'
       this.colCount = this.columnHeaders.length
     },
     hideRow (row, index, fromRanks) {
@@ -217,7 +218,7 @@ export default {
         this.drafted.splice(0, 0, row)
         this.rankings.splice(index, 1)
       } else {
-        // from positional tables - indexes differ so look for a match
+        // from positional tables - indexes differ so look for a match (could be any field, but ranking is unique and never more than 3 digits)
         this.rankings.filter((player, index) => {
           if (row.split(',')[0] === player.split(',')[0]) {
             this.drafted.splice(0, 0, row)
@@ -279,21 +280,17 @@ export default {
 * {
   box-sizing: border-box;
 }
-/* TODO: investigate grid for top of page */
-.bannerContainer {
-  position: relative;
-  text-align: center;
-  color: white;
-  width: 100%;
-}
-.centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
 .clickable {
   cursor: pointer;
+}
+/* banner */
+.hero {
+  height: auto;
+  background-image: url(./assets/ffb-banner.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: white;
 }
 /* flex */
 .parent {
@@ -336,10 +333,6 @@ export default {
   height:300px;
 }
 .search {
-  /* display: grid;
-  /* grid-template-rows: auto; */
-  /* grid-template-columns: 1fr; */
-
   display: flex;
   justify-content: center;
 
