@@ -2,9 +2,9 @@
   <div id="app">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <section class="hero">
-      <header class="hero-header">
+      <header>
         <br>
-        <h1><b>FFB DraftMagic by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></b></h1>
+        <h1><b>FFB DraftMagic© by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></b></h1>
         <h3><i>Inspired by <a href="https://jayzheng.com/ff/" target="_blank">Jay Zheng's Draft Aid</a></i></h3>
         <h3>Steps to draft wizardry:</h3>
         <h3>Download a custom rankings CSV (<i>NOT</i> a cheatsheet) from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
@@ -15,7 +15,7 @@
       </header>
     </section>
     <br>
-    <upload @load="setRows" id="uploadButton"></upload>
+    <upload v-if="this.showUpload === true" @load="setRows" id="uploadButton" class="visible"></upload>
     <br>
     <br>
     <div class="search">
@@ -27,7 +27,7 @@
       </div>
     </div>
     <br>
-    <div class="search searchResults">
+    <div class="search results">
       <table>
         <tbody>
           <!-- eslint-disable-next-line -->
@@ -149,6 +149,7 @@ import Upload from './components/Upload'
 export default {
   name: 'app',
   data: () => ({
+    showUpload: true,
     rankings: [],
     drafted: [],
     columnHeaders: [],
@@ -202,6 +203,8 @@ export default {
   },
   methods: {
     setRows (rows) {
+      this.showUpload = false
+
       for (var player in rows) {
         this.rankings.splice(rows.indexOf(player), 0, rows[player])
       }
@@ -209,6 +212,9 @@ export default {
       let headerString = this.rankings[this.rankings.length - 1] // headers magically at the bottom...
       this.columnHeaders = headerString.split(',')
       this.columnHeaders.splice(1, 1) // remove WISD column
+      // this.columnHeaders.splice(5, 1) // remove Best column (index 6 - 1)
+      // this.columnHeaders.splice(5, 1) // remove Worst column (index 7 - 2)
+      // this.columnHeaders.splice(5, 1) // remove Avg column (index 8 - 3)
       this.columnHeaders.splice(1, 1, 'Name') // rename FP's dumb column name 'Overall'
       this.colCount = this.columnHeaders.length
     },
@@ -285,7 +291,7 @@ export default {
 }
 /* banner */
 .hero {
-  height: auto;
+  height: auto; /* grows according to text - won;t need updating if I move the instructions*/
   background-image: url(./assets/ffb-banner.jpg);
   background-position: center;
   background-size: cover;
@@ -336,6 +342,9 @@ export default {
   display: flex;
   justify-content: center;
 
+}
+.search results{
+  min-height: 100px;
 }
 table, td {
   border-collapse: collapse;
