@@ -55,8 +55,9 @@
           <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(this.rankings).splice(1, this.rankings.length)" @click="hideRow(row, index, true)" class="clickable">
+              <!-- refactored to remove Tier column -->
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(0, colCount)">{{ columnData }}</td>
+              <td v-for="rank in row.split(',').splice(0, 1)">{{ rank }}</td><td v-for="columnData in row.split(',').splice(2, colCount)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -72,7 +73,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(rbList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -87,7 +88,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(qbList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -103,7 +104,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(wrList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -118,7 +119,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(teList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -134,7 +135,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in this.drafted" @click="putBack(row, index)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(1, 2)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(2, 2)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
@@ -167,7 +168,7 @@ export default {
     rbList () {
       let rbs = []
       this.rankings.filter(player => {
-        if (player.split(',')[3].includes('RB')) {
+        if (player.split(',')[4].includes('RB')) {
           rbs.push(player)
         }
       })
@@ -176,7 +177,7 @@ export default {
     wrList () {
       let wrs = []
       this.rankings.filter(player => {
-        if (player.split(',')[3].includes('WR')) {
+        if (player.split(',')[4].includes('WR')) {
           wrs.push(player)
         }
       })
@@ -185,7 +186,7 @@ export default {
     qbList () {
       let qbs = []
       this.rankings.filter(player => {
-        if (player.split(',')[3].includes('QB')) {
+        if (player.split(',')[4].includes('QB')) {
           qbs.push(player)
         }
       })
@@ -194,7 +195,7 @@ export default {
     teList () {
       let tes = []
       this.rankings.filter(player => {
-        if (player.split(',')[3].includes('TE')) {
+        if (player.split(',')[4].includes('TE')) {
           tes.push(player)
         }
       })
@@ -205,16 +206,15 @@ export default {
     setRows (rows) {
       this.showUpload = false
 
+      // populate rankings
       for (var player in rows) {
         this.rankings.splice(rows.indexOf(player), 0, rows[player])
       }
 
       let headerString = this.rankings[this.rankings.length - 1] // headers magically at the bottom...
       this.columnHeaders = headerString.split(',')
+      this.columnHeaders.splice(1, 1) // remove Tier column
       this.columnHeaders.splice(1, 1) // remove WISD column
-      // this.columnHeaders.splice(5, 1) // remove Best column (index 6 - 1)
-      // this.columnHeaders.splice(5, 1) // remove Worst column (index 7 - 2)
-      // this.columnHeaders.splice(5, 1) // remove Avg column (index 8 - 3)
       this.columnHeaders.splice(1, 1, 'Name') // rename FP's dumb column name 'Overall'
       this.colCount = this.columnHeaders.length
     },
@@ -291,7 +291,7 @@ export default {
 }
 /* banner */
 .hero {
-  height: auto; /* grows according to text - won;t need updating if I move the instructions*/
+  height: auto; /* grows according to text - won't need updating if I move the instructions*/
   background-image: url(./assets/ffb-banner.jpg);
   background-position: center;
   background-size: cover;
