@@ -6,11 +6,11 @@
         <br>
         <h1><b>FFB DraftMagic© by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></b></h1>
         <h3><i>Inspired by <a href="https://jayzheng.com/ff/" target="_blank">Jay Zheng's Draft Aid</a></i></h3>
-        <h3>Steps to draft wizardry:</h3>
+        <!-- <h3>Steps to draft wizardry:</h3>
         <h3>Download a custom rankings CSV (<i>NOT</i> a cheatsheet) from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
         <h3>Upload it below.</h3>
         <h3>Click on a player to remove them from Rankings as they are drafted.</h3>
-        <h3>If you clicked by accident, click that player on the Drafted table to return them.</h3>
+        <h3>If you clicked by accident, click that player on the Drafted table to return them.</h3> -->
         <br>
       </header>
     </section>
@@ -38,8 +38,8 @@
         </tbody>
       </table>
     </div>
-    <div class="parent">
-      <div v-if="this.rankings.length > 0" class="child rankings">
+    <div v-if="this.rankings.length > 0" class="parent">
+      <div class="child rankings">
         <th>
           <tr class="orange">
             Rankings
@@ -48,21 +48,21 @@
         <table class="rankingsTable">
           <thead>
             <tr>
+              <!-- td instead of th for aesthetics -->
               <!-- eslint-disable-next-line -->
-              <td v-for="colHeader in columnHeaders" style="background-color: #f5f5f5;">{{ colHeader }}</td>
+              <th v-for="colHeader in columnHeaders" style="background-color: #f5f5f5;">{{ colHeader }}</th>
             </tr>
           </thead>
           <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(this.rankings).splice(1, this.rankings.length)" @click="hideRow(row, index, true)" class="clickable">
-              <!-- refactored to remove Tier column -->
               <!-- eslint-disable-next-line -->
               <td v-for="rank in row.split(',').splice(0, 1)">{{ rank }}</td><td v-for="columnData in row.split(',').splice(2, colCount)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div v-if="this.rankings.length > 0" class="child rbs">
+      <div class="child rbs">
         <th>
           <tr class="orange">
             Running Backs
@@ -73,7 +73,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(rbList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
+              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
             </tr>
           </tbody>
         </table>
@@ -88,12 +88,12 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(qbList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
+              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div v-if="this.rankings.length > 0" class="child wrs">
+      <div class="child wrs">
         <th>
           <tr class="orange">
             Wide Receivers
@@ -104,7 +104,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(wrList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
+              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
             </tr>
           </tbody>
         </table>
@@ -114,12 +114,12 @@
             Tight Ends
           </tr>
         </th>
-        <table class="posTable">
+        <table class="posTable" style="width: 100%">
           <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in mergeSort(teList)" @click="hideRow(row, index, false)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
+              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
             </tr>
           </tbody>
         </table>
@@ -135,7 +135,7 @@
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in this.drafted" @click="putBack(row, index)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(2, 2)">{{ columnData }}</td>
+              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
             </tr>
           </tbody>
         </table>
@@ -282,6 +282,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  /* background-color: #A8A8A8; */
 }
 * {
   box-sizing: border-box;
@@ -309,45 +310,66 @@ export default {
 }
 .child rankings {
   flex: 2 2 auto;
-  min-width: 40%;
 }
 .child rbs {
   flex: 1; /* equivalent of flex: 1 1 auto */
-  min-width: 20%;
 }
 .child wrs {
   flex: 1;
-  min-width: 20%;
 }
+/* NOTE: no child class for QB & TE because they share teh width of the tables above them */
+
 .child drafted {
   flex: 1;
-  min-width: 20%;
 }
 .orange {
   border: none;
   padding: 0 0 0 5px;
   color: orange;
 }
-.rankingsTable {
-  display:block;
+/* Keeping the table header from scrolling with the body breaks the column sizing. Explicitly set them. */
+/* Scroll bar also borks things. Width is fudged a bit to keep things close. Proably use Datatables in the future. */
+.rankingsTable thead tr {
+  width: 99%;
+  display: block;
+  border: 1px solid black;
+}
+.rankingsTable tbody {
+  width: 101%;
+  display: block;
+  height: 1000px;
   overflow:auto;
-  height:1000px;
+}
+.rankingsTable thead tr th {
+  width: 7%;
+}
+.rankingsTable thead tr th:nth-child(2) {
+  width: 20%;
+}
+.rankingsTable tbody tr td {
+  width: 7%;
+}
+.rankingsTable tbody tr td:nth-child(2) {
+  width: 20%;
 }
 .posTable {
   display:block;
   overflow:auto;
   height:300px;
 }
+.posTable tbody tr td:first-child {
+  width: 80%;
+}
 .search {
   display: flex;
   justify-content: center;
-
 }
 .search results{
   min-height: 100px;
 }
 table, td {
   border-collapse: collapse;
+  background-color: #ffffff; /* keep this in case the page bg color is changed */
 }
 td {
   border: 1px solid black;
