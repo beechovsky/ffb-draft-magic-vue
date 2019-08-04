@@ -38,8 +38,8 @@
         </tbody>
       </table>
     </div>
-    <div v-if="this.rankings.length > 0" class="parent">
-      <div class="child rankings">
+    <div v-if="this.rankings.length > 0" class="container">
+      <div class="rankings">
         <th>
           <tr class="orange">
             Rankings
@@ -62,7 +62,7 @@
           </tbody>
         </table>
       </div>
-      <div class="child rbs">
+      <div class="rbs">
         <th>
           <tr class="orange">
             Running Backs
@@ -77,7 +77,9 @@
             </tr>
           </tbody>
         </table>
-        <br>
+        <!-- <br> -->
+      </div>
+      <div class="qbs">
         <th>
           <tr class="orange">
             Quarter Backs
@@ -93,7 +95,7 @@
           </tbody>
         </table>
       </div>
-      <div class="child wrs">
+      <div class="wrs">
         <th>
           <tr class="orange">
             Wide Receivers
@@ -108,7 +110,9 @@
             </tr>
           </tbody>
         </table>
-        <br>
+        <!-- <br> -->
+      </div>
+      <div class="tes">
         <th>
           <tr class="orange">
             Tight Ends
@@ -124,7 +128,7 @@
           </tbody>
         </table>
       </div>
-      <div v-if="this.drafted.length > 0" class="child drafted">
+      <div v-if="this.drafted.length > 0" class="drafted">
         <th>
           <tr class="orange">
             Drafted
@@ -282,7 +286,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  /* background-color: #A8A8A8; */
 }
 * {
   box-sizing: border-box;
@@ -299,28 +302,69 @@ export default {
   background-repeat: no-repeat;
   color: white;
 }
-/* flex */
-.parent {
-  display: flex;
-  flex: wrap;
-  justify-content: space-evenly;
-}
-.child {
-  margin: .5%;
-}
-.child rankings {
-  flex: 2 2 auto;
-}
-.child rbs {
-  flex: 1; /* equivalent of flex: 1 1 auto */
-}
-.child wrs {
-  flex: 1;
-}
-/* NOTE: no child class for QB & TE because they share teh width of the tables above them */
 
-.child drafted {
-  flex: 1;
+.container {
+  /* FLEX */
+  /* display: flex;
+  flex: wrap;
+  justify-content: space-evenly; */
+
+  /* GRID */
+  /* NOTE: checkout grid template areas - https://css-tricks.com/snippets/css/complete-guide-grid/ */
+  display: grid;
+  grid-template-columns: [left-margin] 5% [rankings-start] 30% [rankings-end] 5% [left-pos-start] 15% [left-pos-end] 5% [right-pos-start] 15% [right-pos-end] 5% [drafted-start] 15% [drafted-end] 5%;
+  grid-template-rows: [top-tbl-start] 45% [top-tbl-end] 5% [btm-tbl-start] 45% [btm-tbl-end] 5%;
+  /* justify-items: start; */
+  /* place-items: stretch; */
+  justify-items: start;
+}
+/* .child {
+  margin: .5%;
+} */
+.rankings {
+  /* flex: 2 2 auto; */
+  /* display: grid; */
+  grid-column-start: rankings-start;
+  grid-column-end: rankings-end;
+  grid-row-start: top-tbl-start;
+  grid-row-end: btm-tbl-end;
+}
+.rbs {
+  /* equivalent of flex: 1 1 auto */
+  /* flex: 1;  */
+  /* display: grid; */
+  grid-column-start: left-pos-start;
+  grid-column-end: left-pos-end;
+  grid-row-start: top-tbl-start;
+  grid-row-end: top-tbl-end;
+}
+.qbs {
+  /* display: grid; */
+  grid-column-start: left-pos-start;
+  grid-column-end: left-pos-end;
+  grid-row-start: btm-tbl-start;
+  grid-row-end: btm-tbl-end;
+}
+.wrs {
+  /* display: grid; */
+  grid-column-start: right-pos-start;
+  grid-column-end: right-pos-end;
+  grid-row-start: top-tbl-start;
+  grid-row-end: top-tbl-end;
+}
+.tes {
+  /* display: grid; */
+  grid-column-start: right-pos-start;
+  grid-column-end: right-pos-end;
+  grid-row-start: btm-tbl-start;
+  grid-row-end: btm-tbl-end;
+}
+/* NOTE: no child class for QB & TE if using flex because they share teh width of the tables above them */
+.drafted {
+  /* display: grid; */
+  grid-column-start: drafted-start;
+  grid-column-end: drafted-end;
+  grid-row-start: top-tbl-start;
 }
 .orange {
   border: none;
@@ -377,5 +421,11 @@ td {
 }
 tr:hover {
   background-color: #f5f5f5;
+}
+/* grid */
+.container {
+  /* display: grid; */
+  grid-template-columns: 5% 30% 5% 15% 5% 15% 5% 15% 5%;
+  grid-template-rows: 20% 5% 20% 5% 20% 5% 20% 5%;
 }
 </style>
