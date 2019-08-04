@@ -304,67 +304,52 @@ export default {
 }
 
 .container {
-  /* FLEX */
-  /* display: flex;
-  flex: wrap;
-  justify-content: space-evenly; */
-
-  /* GRID */
   /* NOTE: checkout grid template areas - https://css-tricks.com/snippets/css/complete-guide-grid/ */
+  height: 1200px;
+  margin-left: 1em;
+  margin-right: 1em;
+  padding: 0;
   display: grid;
-  grid-template-columns: [left-margin] 5% [rankings-start] 30% [rankings-end] 5% [left-pos-start] 15% [left-pos-end] 5% [right-pos-start] 15% [right-pos-end] 5% [drafted-start] 15% [drafted-end] 5%;
-  grid-template-rows: [top-tbl-start] 45% [top-tbl-end] 5% [btm-tbl-start] 45% [btm-tbl-end] 5%;
-  /* justify-items: start; */
-  /* place-items: stretch; */
-  justify-items: start;
+  grid-gap: 1em;
+  grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 30% 30%;
 }
-/* .child {
-  margin: .5%;
-} */
 .rankings {
-  /* flex: 2 2 auto; */
-  /* display: grid; */
-  grid-column-start: rankings-start;
-  grid-column-end: rankings-end;
-  grid-row-start: top-tbl-start;
-  grid-row-end: btm-tbl-end;
+  grid-column-start: 2;
+  grid-row-start: 1;
 }
 .rbs {
-  /* equivalent of flex: 1 1 auto */
-  /* flex: 1;  */
-  /* display: grid; */
-  grid-column-start: left-pos-start;
-  grid-column-end: left-pos-end;
-  grid-row-start: top-tbl-start;
-  grid-row-end: top-tbl-end;
+  grid-column-start: 3;
+  grid-row-start: 1;
 }
 .qbs {
-  /* display: grid; */
-  grid-column-start: left-pos-start;
-  grid-column-end: left-pos-end;
-  grid-row-start: btm-tbl-start;
-  grid-row-end: btm-tbl-end;
+  grid-column-start: 3;
+  grid-row-start: 2;
+  align-self: start;
 }
 .wrs {
-  /* display: grid; */
-  grid-column-start: right-pos-start;
-  grid-column-end: right-pos-end;
-  grid-row-start: top-tbl-start;
-  grid-row-end: top-tbl-end;
+  /* grid-column-start: right-pos-start; */
+  /* grid-column-end: right-pos-end; */
+  /* grid-row-start: top-tbl-start;
+  grid-row-end: top-tbl-end; */
+  grid-column-start: 4;
+  grid-row-start: 1;
 }
 .tes {
-  /* display: grid; */
-  grid-column-start: right-pos-start;
-  grid-column-end: right-pos-end;
-  grid-row-start: btm-tbl-start;
-  grid-row-end: btm-tbl-end;
+  /* grid-column-start: right-pos-start; */
+  /* grid-column-end: right-pos-end; */
+  /* grid-row-start: btm-tbl-start;
+  grid-row-end: btm-tbl-end; */
+  grid-column-start: 4;
+  grid-row-start: 2;
+  align-self: start;
 }
-/* NOTE: no child class for QB & TE if using flex because they share teh width of the tables above them */
 .drafted {
-  /* display: grid; */
-  grid-column-start: drafted-start;
+  /* grid-column-start: drafted-start;
   grid-column-end: drafted-end;
-  grid-row-start: top-tbl-start;
+  grid-row-start: top-tbl-start; */
+  grid-column-start: 5;
+  grid-row-start: 1;
 }
 .orange {
   border: none;
@@ -400,6 +385,7 @@ export default {
   display:block;
   overflow:auto;
   height:300px;
+  /* width: auto; */
 }
 .posTable tbody tr td:first-child {
   width: 80%;
@@ -414,18 +400,12 @@ export default {
 table, td {
   border-collapse: collapse;
   background-color: #ffffff; /* keep this in case the page bg color is changed */
+  border: 1px solid black;
 }
 td {
-  border: 1px solid black;
   padding: 1px 2px 1px 2px;
 }
 tr:hover {
   background-color: #f5f5f5;
-}
-/* grid */
-.container {
-  /* display: grid; */
-  grid-template-columns: 5% 30% 5% 15% 5% 15% 5% 15% 5%;
-  grid-template-rows: 20% 5% 20% 5% 20% 5% 20% 5%;
 }
 </style>

@@ -3,10 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import BootstrapVue from 'bootstrap-vue'
-// import { ClientTable } from 'vue-tables-2'
+// these 2 are necessary for actually using Bottstrap-vue. (master (flex) and grid branches are not currently).
+// import "bootstrap/dist/css/bootstrap.min.css"
+// import "bootstrap-vue/dist/bootstrap-vue.css"
 
-// Vue.use(ClientTable, [options = {}], [useVuex = false], [theme = 'bootstrap3'], [template = 'default'])
-// Vue.use(ClientTable)
 Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false
