@@ -4,13 +4,9 @@
     <section class="hero">
       <header>
         <br>
-        <h1><b>FFB DraftMagic© by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></b></h1>
+        <h1><b>FFB DraftMagic</b></h1>
+        <h3>By <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></h3>
         <h3><i>Inspired by <a href="https://jayzheng.com/ff/" target="_blank">Jay Zheng's Draft Aid</a></i></h3>
-        <!-- <h3>Steps to draft wizardry:</h3>
-        <h3>Download a custom rankings CSV (<i>NOT</i> a cheatsheet) from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
-        <h3>Upload it below.</h3>
-        <h3>Click on a player to remove them from Rankings as they are drafted.</h3>
-        <h3>If you clicked by accident, click that player on the Drafted table to return them.</h3> -->
         <br>
       </header>
     </section>
@@ -385,7 +381,7 @@ export default {
   display:block;
   overflow:auto;
   height:300px;
-  /* width: auto; */
+  width: 200px;
 }
 .posTable tbody tr td:first-child {
   width: 80%;
