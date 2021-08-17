@@ -109,20 +109,23 @@ export default {
   },
   methods: {
     setRows (rows) {
-      // hide the upload button
-      this.showUpload = false
+      // // hide the upload button
+      // this.showUpload = false
 
-      // populate rankings
-      for (var playerIndex in rows) {
-        this.rankings.splice(rows.indexOf(playerIndex), 0, rows[playerIndex])
-      }
+      // // populate rankings
+      // for (var playerIndex in rows) {
+      //   this.rankings.splice(rows.indexOf(playerIndex), 0, rows[playerIndex])
+      // }
 
-      // NOTE: rankings is a list of strings of comma-separated values
+      // // NOTE: rankings is a list of strings of comma-separated values
 
-      let headerString = this.rankings[this.rankings.length - 1] // headers end up at the bottom...
-      this.columnHeaders = headerString.split(',')
-      this.draftedColHeaders = [this.columnHeaders[2], this.columnHeaders[4]]
-      this.colCount = this.columnHeaders.length
+      // let headerString = this.rankings[this.rankings.length - 1] // headers end up at the bottom...
+      // this.columnHeaders = headerString.split(',')
+      // this.draftedColHeaders = [this.columnHeaders[2], this.columnHeaders[4]]
+      // this.colCount = this.columnHeaders.length
+
+      // NOW GETTING PARSED JSON FORM CSV FOR US WITH TABLE LIBS
+      console.log('ROWS in parent component: %o' + rows)
     },
     hideRow (row, index) {
       this.drafted.splice(0, 0, row)

@@ -1,7 +1,7 @@
 <template>
   <label class='upload-button'>
     <h1>Upload Rankings CSV</h1>
-    <input type='file' @change='loadTextFromFile'>
+    <input type='file' @change='getFile'>
   </label>
 </template>
 
@@ -11,23 +11,37 @@ export default {
   methods: {
     parseFile (file) {
       // // clean things up a bit
-      let noQuotes = file.replace(/"/g, '')
-      // for blank, toublesome columns
-      let noBlankCols = noQuotes.replace(/,,/g, ',')
-      let parsedRankings = noBlankCols.split(/,[\r\n]/)
+      // let noQuotes = file.replace(/"/g, '')
+      // // for blank, toublesome columns
+      // let noBlankCols = noQuotes.replace(/,,/g, ',')
+      // let parsedRankings = noBlankCols.split(/,[\r\n]/)
 
-      let rows = []
-      rows = parsedRankings[0].split(/\r\n/)
+      let rows = null
+      // rows = parsedRankings[0].split(/\r\n/)
 
+      // parse with papa
+      this.$papa.parse(file, {
+        header: true,
+        complete: function (results) {
+          rows = results.data
+          // let errors = results.errors
+          // let meta = results.meta
+          console.log('ROWS: %o', rows)
+          // console.log('ERRORS: %o', errors)
+          // console.log('META: %o', meta)
+        }
+      })
       // sets parent component's @load method params to rows
       this.$emit('load', rows)
     },
-    loadTextFromFile (event) {
+    getFile (event) {
       if (!event.target.files[0]) {
         return
       }
 
       let file = event.target.files[0]
+
+      // unsure this stuff is necessary with papa
       let reader = new FileReader()
 
       reader.onload = e => this.parseFile(e.target.result)

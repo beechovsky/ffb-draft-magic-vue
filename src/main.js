@@ -3,8 +3,10 @@
 import Vue from 'vue'
 import App from './App'
 import BootstrapVue from 'bootstrap-vue'
+import VuePapaParse from 'vue-papa-parse'
 
 Vue.use(BootstrapVue)
+Vue.use(VuePapaParse)
 
 Vue.config.productionTip = false
 
