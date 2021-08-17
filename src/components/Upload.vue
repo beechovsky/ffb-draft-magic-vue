@@ -10,7 +10,7 @@ export default {
   name: 'Upload',
   methods: {
     parseFile (file) {
-      // clean things up a bit
+      // // clean things up a bit
       let noQuotes = file.replace(/"/g, '')
       // for blank, toublesome columns
       let noBlankCols = noQuotes.replace(/,,/g, ',')
@@ -19,7 +19,7 @@ export default {
       let rows = []
       rows = parsedRankings[0].split(/\r\n/)
 
-      // sets parent component's @load data to rows
+      // sets parent component's @load method params to rows
       this.$emit('load', rows)
     },
     loadTextFromFile (event) {
@@ -38,33 +38,19 @@ export default {
 </script>
 
 <style>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 .upload-button {
   position: relative;
   overflow: hidden;
   display: inline-block;
+  background-color: #ffffff;
   color: orange;
-
   border: 2px solid black;
   border-radius: 5px;
   padding: 8px 12px;
   cursor: pointer;
 }
 .upload-button:hover {
-  background-color: #f5f5f5;
+  background-color: #d6d6d6;
 }
 .upload-button input {
   position: absolute;

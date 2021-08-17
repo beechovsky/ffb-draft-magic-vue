@@ -3,10 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import BootstrapVue from 'bootstrap-vue'
-// import { ClientTable } from 'vue-tables-2'
 
-// Vue.use(ClientTable, [options = {}], [useVuex = false], [theme = 'bootstrap3'], [template = 'default'])
-// Vue.use(ClientTable)
 Vue.use(BootstrapVue)
 
 Vue.config.productionTip = false

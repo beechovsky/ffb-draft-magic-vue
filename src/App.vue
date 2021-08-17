@@ -7,11 +7,6 @@
         <h1><b>FFB DraftMagic</b></h1>
         <!-- <h2>by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></h2> -->
         <!-- TODO: include a link for a popup with instructions -->
-        <!-- <h3>Steps to draft wizardry:</h3>
-        <h3>Download a custom rankings CSV (<i>NOT</i> a cheatsheet) from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
-        <h3>Upload it below.</h3>
-        <h3>Click on a player to remove them from Rankings as they are drafted.</h3>
-        <h3>If you clicked by accident, click that player on the "Drafted" table to return them to rankings.</h3> -->
         <br>
       </header>
     </section>
@@ -20,11 +15,9 @@
     <br>
     <br>
     <div class="search">
-      <div v-if="this.rankings.length > 0">
-        <div class="orange">
+      <div v-if="this.rankings.length > 0" class="orange">
           <label><b>Search Rankings:</b></label>
           <input type="text" v-model="search" placeholder="Player Name"/>
-        </div>
       </div>
     </div>
     <br>
@@ -39,8 +32,8 @@
         </tbody>
       </table>
     </div>
-    <div v-if="this.rankings.length > 0" class="parent">
-      <div class="child rankings">
+    <div class="container">
+      <div v-if="this.rankings.length > 0" class="item rankings">
         <th>
           <tr class="orange">
             Rankings
@@ -51,25 +44,32 @@
             <tr>
               <!-- td instead of th for aesthetics -->
               <!-- eslint-disable-next-line -->
-              <th v-for="colHeader in columnHeaders" style="background-color: #f5f5f5;">{{ colHeader }}</th>
+              <th v-for="colHeader in columnHeaders" style="background-color: #d6d6d6;">{{ colHeader }}</th>
             </tr>
           </thead>
           <tbody>
             <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in mergeSort(this.rankings).splice(1, this.rankings.length)" @click="hideRow(row, index, true)" class="clickable">
+            <tr v-for="(row, index) in mergeSort(this.rankings).splice(1, this.rankings.length)" @click="hideRow(row, index)" class="clickable">
               <!-- eslint-disable-next-line -->
-              <td v-for="rank in row.split(',').splice(0, 1)">{{ rank }}</td><td v-for="columnData in row.split(',').splice(2, colCount)">{{ columnData }}</td>
+              <td v-for="columnData in row.split(',').splice(0, colCount)">{{ columnData }}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="child drafted">
+      <div v-if="this.rankings.length > 0" class="item drafted">
         <th>
           <tr class="orange">
             Drafted
           </tr>
         </th>
-        <table>
+        <table class="draftedTable">
+        <thead>
+            <tr>
+              <!-- td instead of th for aesthetics -->
+              <!-- eslint-disable-next-line -->
+              <th v-for="draftedColHeader in draftedColHeaders" style="background-color: #d6d6d6;">{{ draftedColHeader }}</th>
+            </tr>
+          </thead>
           <tbody>
             <!-- eslint-disable-next-line -->
             <tr v-for="(row, index) in this.drafted" @click="putBack(row, index)" class="clickable">
@@ -93,7 +93,9 @@ export default {
     rankings: [],
     drafted: [],
     columnHeaders: [],
+    draftedColHeaders: [],
     colCount: 0,
+    nameIndex: 0,
     search: ''
   }),
   computed: {
@@ -111,33 +113,20 @@ export default {
       this.showUpload = false
 
       // populate rankings
-      for (var player in rows) {
-        console.log('ROW: ' + player)
-        this.rankings.splice(rows.indexOf(player), 0, rows[player])
+      for (var playerIndex in rows) {
+        this.rankings.splice(rows.indexOf(playerIndex), 0, rows[playerIndex])
       }
 
-      // console.log('RANKINGS: ' + this.rankings + '\n')
+      // NOTE: rankings is a list of strings of comma-separated values
 
-      let headerString = this.rankings[this.rankings.length - 1] // headers magically at the bottom...
+      let headerString = this.rankings[this.rankings.length - 1] // headers end up at the bottom...
       this.columnHeaders = headerString.split(',')
-      // console.log('HEADERS: ' + headerString.split(','))
+      this.draftedColHeaders = [this.columnHeaders[2], this.columnHeaders[4]]
       this.colCount = this.columnHeaders.length
     },
-    hideRow (row, index, fromRanks) {
-      // from the main table
-      if (fromRanks === true) {
-        this.drafted.splice(0, 0, row)
-        this.rankings.splice(index, 1)
-      } else {
-        // from positional tables - indexes differ so look for a match (could be any field, but ranking is unique and never more than 3 digits)
-        this.rankings.filter((player, index) => {
-          if (row.split(',')[0] === player.split(',')[0]) {
-            this.drafted.splice(0, 0, row)
-            this.rankings.splice(index, 1)
-          }
-        })
-      }
-
+    hideRow (row, index) {
+      this.drafted.splice(0, 0, row)
+      this.rankings.splice(index, 1)
       this.search = ''
     },
     putBack (row, index) {
@@ -187,14 +176,20 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  /* background-color: #A8A8A8; */
 }
-* {
-  box-sizing: border-box;
-}
+
 .clickable {
   cursor: pointer;
 }
+
+/* Basic mobile styling */
+@media screen and (max-width: 640px) {
+  /* hide positional tables */
+  .child {
+    display: none;
+  }
+}
+
 /* banner */
 .hero {
   height: auto; /* grows according to text - won't need updating if I move the instructions*/
@@ -202,85 +197,59 @@ export default {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  color: white;
-}
-/* flex */
-.parent {
-  display: flex;
-  flex: wrap;
-  justify-content: space-evenly;
-}
-.child {
-  margin: .5%;
-}
-.child rankings {
-  flex: 2 2 auto;
-}
-.child rbs {
-  flex: 1; /* equivalent of flex: 1 1 auto */
-}
-.child wrs {
-  flex: 1;
-}
-/* NOTE: no child class for QB & TE because they share teh width of the tables above them */
-
-.child drafted {
-  flex: 1;
+  color: white; /* text color */
 }
 .orange {
   border: none;
   padding: 0 0 0 5px;
   color: orange;
-}
-/* Keeping the table header from scrolling with the body breaks the column sizing. Explicitly set them. */
-/* Scroll bar also borks things. Width is fudged a bit to keep things close. Proably use Datatables in the future. */
-.rankingsTable thead tr {
-  width: 99%;
-  display: block;
-  border: 1px solid black;
-}
-.rankingsTable tbody {
-  width: 101%;
-  display: block;
-  height: 1000px;
-  overflow:auto;
-}
-.rankingsTable thead tr th {
-  width: 7%;
-}
-.rankingsTable thead tr th:nth-child(2) {
-  width: 20%;
-}
-.rankingsTable tbody tr td {
-  width: 7%;
-}
-.rankingsTable tbody tr td:nth-child(2) {
-  width: 20%;
-}
-.posTable {
-  display:block;
-  overflow:auto;
-  height:300px;
-}
-.posTable tbody tr td:first-child {
-  width: 80%;
+  font-weight: bold;
 }
 .search {
   display: flex;
   justify-content: center;
 }
-.search results{
+.search results {
   min-height: 100px;
 }
-table, td {
+/* grid */
+.container {
+  display: grid;
+  grid-template-columns: 50% 25%;
+}
+
+.item {
+  margin: 1em;
+}
+
+.rankingsTable {
+  min-width: 100%;
+}
+
+.draftedTable {
+  min-width: 100%;
+}
+
+/* account for gigantic names */
+.rankingsTable tbody tr td:nth-child(2) {
+  min-width: 100%;
+}
+
+.draftedTable tbody tr td:first-child {
+  min-width: 100%;
+}
+
+table, tr, td {
+  border: 1px solid black;
   border-collapse: collapse;
-  background-color: #ffffff; /* keep this in case the page bg color is changed */
+}
+th {
+  font-weight: normal;
 }
 td {
-  border: 1px solid black;
   padding: 1px 2px 1px 2px;
 }
 tr:hover {
-  background-color: #f5f5f5;
+  background-color: #d6d6d6;
 }
 </style>
