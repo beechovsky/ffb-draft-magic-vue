@@ -4,13 +4,14 @@
     <section class="hero">
       <header>
         <br>
-        <h1><b>FFB DraftMagic© by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></b></h1>
-        <h3><i>Inspired by <a href="https://jayzheng.com/ff/" target="_blank">Jay Zheng's Draft Aid</a></i></h3>
+        <h1><b>FFB DraftMagic</b></h1>
+        <!-- <h2>by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></h2> -->
+        <!-- TODO: include a link for a popup with instructions -->
         <!-- <h3>Steps to draft wizardry:</h3>
         <h3>Download a custom rankings CSV (<i>NOT</i> a cheatsheet) from <a href="https://www.fantasypros.com/nfl/rankings/consensus-cheatsheets.php" target="_blank">Fantasy Pros</a>.</h3>
         <h3>Upload it below.</h3>
         <h3>Click on a player to remove them from Rankings as they are drafted.</h3>
-        <h3>If you clicked by accident, click that player on the Drafted table to return them.</h3> -->
+        <h3>If you clicked by accident, click that player on the "Drafted" table to return them to rankings.</h3> -->
         <br>
       </header>
     </section>
@@ -33,7 +34,7 @@
           <!-- eslint-disable-next-line -->
           <tr v-for="(row, index) in searchList" @click="hideRow(row, index, false)" class="clickable">
             <!-- eslint-disable-next-line -->
-            <td v-for="columnData in row.split(',').splice(1, 3)">{{ columnData }}</td>
+            <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td> <!-- name, team, pos rank -->
           </tr>
         </tbody>
       </table>
@@ -62,69 +63,7 @@
           </tbody>
         </table>
       </div>
-      <div class="child rbs">
-        <th>
-          <tr class="orange">
-            Running Backs
-          </tr>
-        </th>
-        <table class="posTable">
-          <tbody>
-            <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in mergeSort(rbList)" @click="hideRow(row, index, false)" class="clickable">
-              <!-- eslint-disable-next-line -->
-              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <br>
-        <th>
-          <tr class="orange">
-            Quarter Backs
-          </tr>
-        </th>
-        <table class="posTable">
-          <tbody>
-            <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in mergeSort(qbList)" @click="hideRow(row, index, false)" class="clickable">
-              <!-- eslint-disable-next-line -->
-              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="child wrs">
-        <th>
-          <tr class="orange">
-            Wide Receivers
-          </tr>
-        </th>
-        <table class="posTable">
-          <tbody>
-            <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in mergeSort(wrList)" @click="hideRow(row, index, false)" class="clickable">
-              <!-- eslint-disable-next-line -->
-              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <br>
-        <th>
-          <tr class="orange">
-            Tight Ends
-          </tr>
-        </th>
-        <table class="posTable" style="width: 100%">
-          <tbody>
-            <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in mergeSort(teList)" @click="hideRow(row, index, false)" class="clickable">
-              <!-- eslint-disable-next-line -->
-              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div v-if="this.drafted.length > 0" class="child drafted">
+      <div class="child drafted">
         <th>
           <tr class="orange">
             Drafted
@@ -164,58 +103,24 @@ export default {
           return player.toLowerCase().includes(this.search.toLowerCase())
         })
       }
-    },
-    rbList () {
-      let rbs = []
-      this.rankings.filter(player => {
-        if (player.split(',')[4].includes('RB')) {
-          rbs.push(player)
-        }
-      })
-      return rbs
-    },
-    wrList () {
-      let wrs = []
-      this.rankings.filter(player => {
-        if (player.split(',')[4].includes('WR')) {
-          wrs.push(player)
-        }
-      })
-      return wrs
-    },
-    qbList () {
-      let qbs = []
-      this.rankings.filter(player => {
-        if (player.split(',')[4].includes('QB')) {
-          qbs.push(player)
-        }
-      })
-      return qbs
-    },
-    teList () {
-      let tes = []
-      this.rankings.filter(player => {
-        if (player.split(',')[4].includes('TE')) {
-          tes.push(player)
-        }
-      })
-      return tes
     }
   },
   methods: {
     setRows (rows) {
+      // hide the upload button
       this.showUpload = false
 
       // populate rankings
       for (var player in rows) {
+        console.log('ROW: ' + player)
         this.rankings.splice(rows.indexOf(player), 0, rows[player])
       }
 
+      // console.log('RANKINGS: ' + this.rankings + '\n')
+
       let headerString = this.rankings[this.rankings.length - 1] // headers magically at the bottom...
       this.columnHeaders = headerString.split(',')
-      this.columnHeaders.splice(1, 1) // remove Tier column
-      this.columnHeaders.splice(1, 1) // remove WISD column
-      this.columnHeaders.splice(1, 1, 'Name') // rename FP's dumb column name 'Overall'
+      // console.log('HEADERS: ' + headerString.split(','))
       this.colCount = this.columnHeaders.length
     },
     hideRow (row, index, fromRanks) {

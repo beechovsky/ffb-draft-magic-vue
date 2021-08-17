@@ -10,13 +10,16 @@ export default {
   name: 'Upload',
   methods: {
     parseFile (file) {
+      // clean things up a bit
       let noQuotes = file.replace(/"/g, '')
-      let noBlankCols = noQuotes.replace(/,,/g, ',') // for WISD column, requires removal of header in parent as well
+      // for blank, toublesome columns
+      let noBlankCols = noQuotes.replace(/,,/g, ',')
       let parsedRankings = noBlankCols.split(/,[\r\n]/)
 
       let rows = []
       rows = parsedRankings[0].split(/\r\n/)
 
+      // sets parent component's @load data to rows
       this.$emit('load', rows)
     },
     loadTextFromFile (event) {
