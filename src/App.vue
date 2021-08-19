@@ -4,7 +4,7 @@
     <section class="hero">
       <header>
         <br>
-        <h1><b>FFB Draft Magic</b></h1>
+        <h1><b>FFB DraftMagic</b></h1>
         <!-- <p><i>by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></i></p> -->
         <!-- TODO: include a link for a popup with instructions -->
         <br>
@@ -36,25 +36,25 @@
       </table>
     </div> -->
 
-    <div class="container">
-      <div v-if="this.rankings.length > 0" class="item">
+    <div v-if="this.rankings.length > 0" class="container">
+      <div class="item">
         <th>
           <tr class="orange">
             Rankings
           </tr>
         </th>
         <div>
-          <b-table id="rankingsTable" @row-clicked="removeFromRankings" :items="this.rankings"></b-table>
+          <b-table :sort-by.sync="sortBy" :items="this.rankings" @row-clicked="removeFromRankings" class="rankingsTable"></b-table>
         </div>
       </div>
-      <div v-if="this.rankings.length > 0" class="item">
+      <div class="item">
         <th>
           <tr class="orange">
             Drafted
           </tr>
         </th>
         <div>
-          <b-table id="draftedTable" @row-clicked="undraft" :items="this.drafted"></b-table>
+          <b-table :items="this.drafted" :fields="this.draftedColumns" @row-clicked="undraft" class="draftedTable"></b-table>
         </div>
       </div>
     </div>
@@ -67,12 +67,15 @@ import Upload from './components/Upload'
 export default {
   name: 'app',
   data: () => ({
+    // big button
     showUpload: true,
+    // tables
     rankings: [],
-    rankingsTableReady: true, // 'lock' table to avoid b-table's dumb double event submit
     drafted: [],
-    draftedTableReady: true,
-    colHeaders: [],
+    colHeaders: [], // KEEP - could prove useful for smaller drafted table
+    draftedColumns: [],
+    sortBy: 'RK', // NOT FLEXIBLE - make the code smarter
+    // search
     search: ''
   }),
   computed: {
@@ -94,23 +97,20 @@ export default {
       // update wider-scoped var
       this.rankings = rows
 
+      // TODO:Need to determine rank and name column indexes at the very least for sorting and limiting the size of drafted table
+
       // get columns headers for use in drafted table (not using b-table there due to event collision)
-      // this.colHeaders = Object.keys(this.rankings[0])
+      this.colHeaders = Object.keys(this.rankings[0])
+      this.draftedColumns.push(this.colHeaders[2]) // name
       // console.log('COL HEADERS: %o', this.colHeaders)
     },
     removeFromRankings (row) {
-      console.log('ROW: %o', row)
-      // stop the tables from doing other things
-      // this.rankingsTableReady = false
-      // this.draftedTableReady = false
+      // console.log('ROW: %o', row)
 
       this.drafted.splice(0, 0, row)
       this.rankings.splice(this.rankings.indexOf(row), 1)
 
-      // opent he tables back up
-      // this.rankingsTableReady = true
-      // this.draftedTableReady = true
-      console.log('DRAFTED AFTER ADDITION: %o', this.drafted)
+      // console.log('DRAFTED AFTER ADDITION: %o', this.drafted)
       this.search = ''
     },
     undraft (row) {
@@ -184,6 +184,12 @@ export default {
   font-size: xx-large;
 }
 
+.hero h1 {
+  color: #fff;
+  text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
+  font: 100px 'ChunkFiveRegular';
+}
+
 /* for headers and labels */
 .orange {
   border: none;
@@ -204,7 +210,7 @@ export default {
 /* grid for rankings tables*/
 .container {
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 50% 25%;
 }
 .item {
   margin: 1em;
@@ -213,25 +219,23 @@ export default {
 .rankingsTable {
   min-width: 100%;
 }
-
 .draftedTable {
   min-width: 100%;
 }
-
 .rankingsTable th {
   background-color: #d6d6d6;
 }
-
 .draftedTable th {
   background-color: #d6d6d6;
 }
 
+/* table styles since b-table styling isnt working ... */
 table, tr, td {
   border: 1px solid black;
   border-collapse: collapse;
 }
 th {
-  font-weight: normal;
+  font-weight: bold;
 }
 td {
   padding: 1px 2px 1px 2px;
@@ -239,5 +243,4 @@ td {
 tr:hover {
   background-color: #d6d6d6;
 }
-
 </style>
