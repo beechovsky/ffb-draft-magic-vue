@@ -10,27 +10,24 @@ export default {
   name: 'Upload',
   methods: {
     parseFile (file) {
-      // // clean things up a bit
-      // let noQuotes = file.replace(/"/g, '')
-      // // for blank, toublesome columns
-      // let noBlankCols = noQuotes.replace(/,,/g, ',')
-      // let parsedRankings = noBlankCols.split(/,[\r\n]/)
-
       let rows = null
-      // rows = parsedRankings[0].split(/\r\n/)
+      // let errors = null
+      // let meta = null
 
       // parse with papa
       this.$papa.parse(file, {
         header: true,
         complete: function (results) {
           rows = results.data
-          // let errors = results.errors
-          // let meta = results.meta
-          console.log('ROWS: %o', rows)
+          // errors = results.errors
+          // meta = results.meta
+          // console.log('ROWS: %o', rows)
           // console.log('ERRORS: %o', errors)
           // console.log('META: %o', meta)
         }
       })
+
+      // should slo send errors and meta
       // sets parent component's @load method params to rows
       this.$emit('load', rows)
     },

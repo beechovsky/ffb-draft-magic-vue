@@ -4,8 +4,8 @@
     <section class="hero">
       <header>
         <br>
-        <h1><b>FFB DraftMagic</b></h1>
-        <!-- <h2>by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></h2> -->
+        <h1><b>FFB Draft Magic</b></h1>
+        <!-- <p><i>by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></i></p> -->
         <!-- TODO: include a link for a popup with instructions -->
         <br>
       </header>
@@ -14,6 +14,7 @@
     <upload v-if="this.showUpload === true" @load="setRows" id="uploadButton" class="visible"></upload>
     <br>
     <br>
+    <!--
     <div class="search">
       <div v-if="this.rankings.length > 0" class="orange">
           <label><b>Search Rankings:</b></label>
@@ -21,63 +22,40 @@
       </div>
     </div>
     <br>
+    -->
+    <!--
     <div class="search results">
       <table>
-        <tbody>
+        <tbody> -->
           <!-- eslint-disable-next-line -->
-          <tr v-for="(row, index) in searchList" @click="hideRow(row, index, false)" class="clickable">
+          <!-- <tr v-for="(row, index) in searchList" @click="hideRow(row, index, false)" class="clickable">-->
             <!-- eslint-disable-next-line -->
-            <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td> <!-- name, team, pos rank -->
+            <!-- <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
           </tr>
         </tbody>
       </table>
-    </div>
+    </div> -->
+
     <div class="container">
-      <div v-if="this.rankings.length > 0" class="item rankings">
+      <div v-if="this.rankings.length > 0" class="item">
         <th>
           <tr class="orange">
             Rankings
           </tr>
         </th>
-        <table class="rankingsTable">
-          <thead>
-            <tr>
-              <!-- td instead of th for aesthetics -->
-              <!-- eslint-disable-next-line -->
-              <th v-for="colHeader in columnHeaders" style="background-color: #d6d6d6;">{{ colHeader }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in mergeSort(this.rankings).splice(1, this.rankings.length)" @click="hideRow(row, index)" class="clickable">
-              <!-- eslint-disable-next-line -->
-              <td v-for="columnData in row.split(',').splice(0, colCount)">{{ columnData }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div>
+          <b-table id="rankingsTable" @row-clicked="removeFromRankings" :items="this.rankings"></b-table>
+        </div>
       </div>
-      <div v-if="this.rankings.length > 0" class="item drafted">
+      <div v-if="this.rankings.length > 0" class="item">
         <th>
           <tr class="orange">
             Drafted
           </tr>
         </th>
-        <table class="draftedTable">
-        <thead>
-            <tr>
-              <!-- td instead of th for aesthetics -->
-              <!-- eslint-disable-next-line -->
-              <th v-for="draftedColHeader in draftedColHeaders" style="background-color: #d6d6d6;">{{ draftedColHeader }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- eslint-disable-next-line -->
-            <tr v-for="(row, index) in this.drafted" @click="putBack(row, index)" class="clickable">
-              <!-- eslint-disable-next-line -->
-              <td v-for="name in row.split(',').splice(2, 1)">{{ name }}</td><td v-for="pos in row.split(',').splice(4, 1)">{{ pos }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div>
+          <b-table id="draftedTable" @row-clicked="removeFromRankings" :items="this.drafted"></b-table>
+        </div>
       </div>
     </div>
   </div>
@@ -91,14 +69,14 @@ export default {
   data: () => ({
     showUpload: true,
     rankings: [],
+    rankingsTableReady: true, // 'lock' table to avoid b-table's dumb double event submit
     drafted: [],
-    columnHeaders: [],
-    draftedColHeaders: [],
-    colCount: 0,
-    nameIndex: 0,
+    draftedTableReady: true,
+    colHeaders: [],
     search: ''
   }),
   computed: {
+    // THIS REQUIRES THE ROWS ARE STRINGS - THEY ARE NOT ANYMORE - SEARCH DISABLED
     searchList () {
       if (this.search.length > 3) { // hacky way of keeping results table from displaying persistently and limiting the size of the results eventually displayed
         return this.rankings.filter(player => {
@@ -109,33 +87,35 @@ export default {
   },
   methods: {
     setRows (rows) {
-      // // hide the upload button
-      // this.showUpload = false
+      // console.log('ROWS: %o', rows)
+      // hide the upload button
+      this.showUpload = false
 
-      // // populate rankings
-      // for (var playerIndex in rows) {
-      //   this.rankings.splice(rows.indexOf(playerIndex), 0, rows[playerIndex])
-      // }
+      // update wider-scoped var
+      this.rankings = rows
 
-      // // NOTE: rankings is a list of strings of comma-separated values
-
-      // let headerString = this.rankings[this.rankings.length - 1] // headers end up at the bottom...
-      // this.columnHeaders = headerString.split(',')
-      // this.draftedColHeaders = [this.columnHeaders[2], this.columnHeaders[4]]
-      // this.colCount = this.columnHeaders.length
-
-      // NOW GETTING PARSED JSON FORM CSV FOR US WITH TABLE LIBS
-      console.log('ROWS in parent component: %o' + rows)
+      // get columns headers for use in drafted table (not using b-table there due to event collision)
+      // this.colHeaders = Object.keys(this.rankings[0])
+      // console.log('COL HEADERS: %o', this.colHeaders)
     },
-    hideRow (row, index) {
+    removeFromRankings (row) {
+      console.log('ROW: %o', row)
+      // stop the tables from doing other things
+      // this.rankingsTableReady = false
+      // this.draftedTableReady = false
+
       this.drafted.splice(0, 0, row)
-      this.rankings.splice(index, 1)
+      this.rankings.splice(this.rankings.indexOf(row), 1)
+
+      // opent he tables back up
+      // this.rankingsTableReady = true
+      // this.draftedTableReady = true
+      console.log('DRAFTED AFTER ADDITION: %o', this.drafted)
       this.search = ''
     },
-    putBack (row, index) {
-      // tables are sorted, so no need for intelligence here
+    unDraft (row) {
       this.rankings.splice(0, 0, row)
-      this.drafted.splice(index, 1)
+      this.drafted.splice(this.drafted.indexOf(row), 1)
     },
     mergeSort (arr) {
       if (arr.length < 2) {
@@ -201,13 +181,18 @@ export default {
   background-size: cover;
   background-repeat: no-repeat;
   color: white; /* text color */
+  font-size: xx-large;
 }
+
+/* for headers and labels */
 .orange {
   border: none;
   padding: 0 0 0 5px;
   color: orange;
   font-weight: bold;
 }
+
+/* search */
 .search {
   display: flex;
   justify-content: center;
@@ -215,12 +200,12 @@ export default {
 .search results {
   min-height: 100px;
 }
-/* grid */
+
+/* grid for rankings tables*/
 .container {
   display: grid;
-  grid-template-columns: 50% 25%;
+  grid-template-columns: 50% 50%;
 }
-
 .item {
   margin: 1em;
 }
@@ -233,13 +218,12 @@ export default {
   min-width: 100%;
 }
 
-/* account for gigantic names */
-.rankingsTable tbody tr td:nth-child(2) {
-  min-width: 100%;
+.rankingsTable th {
+  background-color: #d6d6d6;
 }
 
-.draftedTable tbody tr td:first-child {
-  min-width: 100%;
+.draftedTable th {
+  background-color: #d6d6d6;
 }
 
 table, tr, td {
@@ -255,4 +239,5 @@ td {
 tr:hover {
   background-color: #d6d6d6;
 }
+
 </style>
