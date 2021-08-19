@@ -54,7 +54,7 @@
           </tr>
         </th>
         <div>
-          <b-table id="draftedTable" @row-clicked="removeFromRankings" :items="this.drafted"></b-table>
+          <b-table id="draftedTable" @row-clicked="undraft" :items="this.drafted"></b-table>
         </div>
       </div>
     </div>
@@ -113,7 +113,7 @@ export default {
       console.log('DRAFTED AFTER ADDITION: %o', this.drafted)
       this.search = ''
     },
-    unDraft (row) {
+    undraft (row) {
       this.rankings.splice(0, 0, row)
       this.drafted.splice(this.drafted.indexOf(row), 1)
     },
