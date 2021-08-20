@@ -17,54 +17,7 @@
     <br>
     <br>
     <!-- FILTERING -->
-   <!-- <b-container v-if="this.rankings.length > 0" fluid>
-      <b-row>
-        <b-col lg="6" class="my-1">
-          <b-form-group
-            label="Filter"
-            label-for="filter-input"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-size="sm"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-input
-                id="filter-input"
-                v-model="filter"
-                type="search"
-                placeholder="Type to Search"
-              ></b-form-input>
-
-              <b-input-group-append>
-                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </b-col>
-        <b-col lg="6" class="my-1">
-          <b-form-group
-            v-model="sortDirection"
-            label="Filter On"
-            description="Leave all unchecked to filter on all data"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-size="sm"
-            class="mb-0"
-            v-slot="{ ariaDescribedby }"
-          >
-            <b-form-checkbox-group
-              v-model="filterOn"
-              :aria-describedby="ariaDescribedby"
-              class="mt-1"
-            >
-              <b-form-checkbox value="name">Name</b-form-checkbox>
-              <b-form-checkbox value="age">Position</b-form-checkbox>
-            </b-form-checkbox-group>
-          </b-form-group>
-        </b-col>
-      </b-row>
-    </b-container> -->
+    <!-- https://bootstrap-vue.org/docs/components/table#complete-example -->
     <!-- END FILTERING -->
 
     <!-- TABLES -->
@@ -91,7 +44,7 @@
     <div v-if="this.rankings.length > 0" class="container">
       <div class="item">
         <th>
-        <!-- investigate captions -->
+        <!-- TODO: investigate captions -->
           <tr class="orange">
             Rankings
           </tr>
@@ -105,7 +58,7 @@
             :items="this.rankings"
             :fields="this.colHeaders"
             @row-clicked="removeFromRankings"
-            class="rankingsTable"></b-table>
+            ></b-table>
         </div>
       </div>
       <div class="item">
@@ -115,7 +68,7 @@
           </tr>
         </th>
         <div>
-          <b-table :items="this.drafted" :fields="this.draftedColumns" @row-clicked="undraft" class="draftedTable"></b-table>
+          <b-table :items="this.drafted" :fields="this.draftedColumns" @row-clicked="undraft"></b-table>
         </div>
       </div>
     </div>
@@ -284,20 +237,10 @@ export default {
   margin: 1em;
 }
 
-.rankingsTable {
-  min-width: 100%;
-}
-.draftedTable {
-  min-width: 100%;
-}
-.rankingsTable th {
-  background-color: #d6d6d6;
-}
-.draftedTable th {
-  background-color: #d6d6d6;
-}
-
 /* general table styles since b-table styling isnt working ... */
+table {
+  min-width: 100%;
+}
 table, tr, td {
   border: 1px solid black;
   border-collapse: collapse;
@@ -305,6 +248,7 @@ table, tr, td {
 }
 th {
   font-weight: bold;
+  background-color: #d6d6d6;
 }
 td {
   padding: 1px 2px 1px 2px;
