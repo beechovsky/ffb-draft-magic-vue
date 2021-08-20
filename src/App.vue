@@ -43,8 +43,61 @@
             Rankings
           </tr>
         </th>
+        <b-col lg="6" class="my-1">
+          <b-form-group
+            label="Filter"
+            label-for="filter-input"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            class="mb-0"
+          >
+            <b-input-group size="sm">
+              <b-form-input
+                id="filter-input"
+                v-model="filter"
+                type="search"
+                placeholder="Type to Search"
+              ></b-form-input>
+
+              <b-input-group-append>
+                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
+        </b-col>
+        <b-col lg="6" class="my-1">
+          <b-form-group
+            v-model="sortDirection"
+            label="Filter On"
+            description="Leave all unchecked to filter on all data"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            class="mb-0"
+            v-slot="{ ariaDescribedby }"
+          >
+            <b-form-checkbox-group
+              v-model="filterOn"
+              :aria-describedby="ariaDescribedby"
+              class="mt-1"
+            >
+              <b-form-checkbox value="name">Name</b-form-checkbox>
+              <b-form-checkbox value="age">POS</b-form-checkbox>
+            </b-form-checkbox-group>
+          </b-form-group>
+        </b-col>
+
         <div>
-          <b-table :sort-by.sync="sortBy" :items="this.rankings" :fields="this.colHeaders" @row-clicked="removeFromRankings" class="rankingsTable"></b-table>
+          <b-table
+            :filter="filter"
+            :filter-included-fields="filterOn"
+            :sort-direction="sortDirection"
+            :sort-by.sync="sortBy"
+            :items="this.rankings"
+            :fields="this.colHeaders"
+            @row-clicked="removeFromRankings"
+            class="rankingsTable"></b-table>
         </div>
       </div>
       <div class="item">
@@ -73,16 +126,24 @@ export default {
     // tables
     rankings: [],
     drafted: [],
+
+    // used as fields - may need extra optinos for filtering
+    // see: https://bootstrap-vue.org/docs/components/table#complete-example
     colHeaders: [], // useful for smaller drafted table and grokking sheets wih disparate formats
     draftedColumns: [],
+
     sortBy: null, // determined below, b-table needs field name not index
     nameColIndex: null, // determined below
     // common col headers for important/useful columns
     rankColNames: ['ranking', 'rank', 'rk', 'rk.', 'overall', 'ovr', 'ovr.'],
     nameColNames: ['player name', 'player', 'name', 'nm', 'nm.'],
 
-    // search
-    search: ''
+    // table filtering
+    sortDirection: 'asc',
+    filter: null,
+    filterOn: [] // ,
+    // DEPRECATED - search
+    // search: ''
   }),
   computed: {
     // THIS REQUIRES THE ROWS ARE STRINGS - THEY ARE NOT ANYMORE - SEARCH DISABLED
