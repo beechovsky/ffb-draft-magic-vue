@@ -44,7 +44,7 @@
           </tr>
         </th>
         <div>
-          <b-table :sort-by.sync="sortBy" :items="this.rankings" @row-clicked="removeFromRankings" class="rankingsTable"></b-table>
+          <b-table :sort-by.sync="sortBy" :items="this.rankings" :fields="this.colHeaders" @row-clicked="removeFromRankings" class="rankingsTable"></b-table>
         </div>
       </div>
       <div class="item">
@@ -67,14 +67,20 @@ import Upload from './components/Upload'
 export default {
   name: 'app',
   data: () => ({
-    // big button
+    // big upload button
     showUpload: true,
+
     // tables
     rankings: [],
     drafted: [],
-    colHeaders: [], // KEEP - could prove useful for smaller drafted table
+    colHeaders: [], // useful for smaller drafted table and grokking sheets wih disparate formats
     draftedColumns: [],
-    sortBy: 'RK', // NOT FLEXIBLE - make the code smarter
+    sortBy: null, // determined below, b-table needs field name not index
+    nameColIndex: null, // determined below
+    // common col headers for important/useful columns
+    rankColNames: ['ranking', 'rank', 'rk', 'rk.', 'overall', 'ovr', 'ovr.'],
+    nameColNames: ['player name', 'player', 'name', 'nm', 'nm.'],
+
     // search
     search: ''
   }),
@@ -90,18 +96,30 @@ export default {
   },
   methods: {
     setRows (rows) {
-      // console.log('ROWS: %o', rows)
       // hide the upload button
       this.showUpload = false
 
       // update wider-scoped var
       this.rankings = rows
 
-      // TODO:Need to determine rank and name column indexes at the very least for sorting and limiting the size of drafted table
-
-      // get columns headers for use in drafted table (not using b-table there due to event collision)
+      // get columns headers for use as b-table fields and for determining rank and name fields, upon which we'll operate
       this.colHeaders = Object.keys(this.rankings[0])
-      this.draftedColumns.push(this.colHeaders[2]) // name
+      // determine rank and name columns
+      for (var idx in this.colHeaders) {
+        // console.log('HEADER: ' + this.colHeaders[idx])
+        // rank
+        if (this.rankColNames.includes(this.colHeaders[idx].toLowerCase())) {
+          // console.log('FOUND RANK COL: ' + this.colHeaders[idx])
+          this.sortBy = this.colHeaders[idx]
+        }
+
+        // name
+        if (this.nameColNames.includes(this.colHeaders[idx].toLowerCase())) {
+          // console.log('FOUND NAME COL: ' + this.colHeaders[idx])
+          this.nameColIndex = idx
+        }
+      }
+      this.draftedColumns.push(this.colHeaders[this.nameColIndex]) // name - could possibly go in loop above
       // console.log('COL HEADERS: %o', this.colHeaders)
     },
     removeFromRankings (row) {
@@ -176,11 +194,11 @@ export default {
 /* banner */
 .hero {
   height: auto; /* grows according to text - won't need updating if I move the instructions*/
-  background-image: url(./assets/ffb-banner.jpg);
+  background: url(./assets/ffb-banner.jpg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  color: white; /* text color */
+  color: white;
   font-size: xx-large;
 }
 
