@@ -10,39 +10,15 @@
         <br>
       </header>
     </section>
+
+    <!-- UPLOAD BUTTON -->
     <br>
     <upload v-if="this.showUpload === true" @load="setRows" id="uploadButton" class="visible"></upload>
     <br>
     <br>
-    <!--
-    <div class="search">
-      <div v-if="this.rankings.length > 0" class="orange">
-          <label><b>Search Rankings:</b></label>
-          <input type="text" v-model="search" placeholder="Player Name"/>
-      </div>
-    </div>
-    <br>
-    -->
-    <!--
-    <div class="search results">
-      <table>
-        <tbody> -->
-          <!-- eslint-disable-next-line -->
-          <!-- <tr v-for="(row, index) in searchList" @click="hideRow(row, index, false)" class="clickable">-->
-            <!-- eslint-disable-next-line -->
-            <!-- <td v-for="columnData in row.split(',').splice(2, 3)">{{ columnData }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
-
-    <div v-if="this.rankings.length > 0" class="container">
-      <div class="item">
-        <th>
-          <tr class="orange">
-            Rankings
-          </tr>
-        </th>
+    <!-- FILTERING -->
+   <!-- <b-container v-if="this.rankings.length > 0" fluid>
+      <b-row>
         <b-col lg="6" class="my-1">
           <b-form-group
             label="Filter"
@@ -83,11 +59,43 @@
               class="mt-1"
             >
               <b-form-checkbox value="name">Name</b-form-checkbox>
-              <b-form-checkbox value="age">POS</b-form-checkbox>
+              <b-form-checkbox value="age">Position</b-form-checkbox>
             </b-form-checkbox-group>
           </b-form-group>
         </b-col>
+      </b-row>
+    </b-container> -->
+    <!-- END FILTERING -->
 
+    <!-- TABLES -->
+    <div v-if="this.rankings.length > 0">
+      <b-form-group
+        label="Filter"
+        label-for="filter-input"
+
+      >
+        <b-input-group>
+          <b-form-input
+            id="filter-input"
+            v-model="filter"
+            type="search"
+            placeholder="Type to Search"
+          ></b-form-input>
+
+          <b-input-group-append>
+            <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </b-form-group>
+    </div>
+    <div v-if="this.rankings.length > 0" class="container">
+      <div class="item">
+        <th>
+        <!-- investigate captions -->
+          <tr class="orange">
+            Rankings
+          </tr>
+        </th>
         <div>
           <b-table
             :filter="filter"
@@ -132,29 +140,21 @@ export default {
     colHeaders: [], // useful for smaller drafted table and grokking sheets wih disparate formats
     draftedColumns: [],
 
-    sortBy: null, // determined below, b-table needs field name not index
+    sortBy: null, // whatever rank is called; determined below, b-table and filter need field name not index
+    nameCol: null, // determined below; used in filter
     nameColIndex: null, // determined below
+    posCol: null, // determined below; used in filter
     // common col headers for important/useful columns
     rankColNames: ['ranking', 'rank', 'rk', 'rk.', 'overall', 'ovr', 'ovr.'],
     nameColNames: ['player name', 'player', 'name', 'nm', 'nm.'],
+    posColNames: ['position', 'pos.', 'pos'],
 
     // table filtering
     sortDirection: 'asc',
     filter: null,
-    filterOn: [] // ,
-    // DEPRECATED - search
-    // search: ''
+    filterOn: [],
+    hover: true
   }),
-  computed: {
-    // THIS REQUIRES THE ROWS ARE STRINGS - THEY ARE NOT ANYMORE - SEARCH DISABLED
-    searchList () {
-      if (this.search.length > 3) { // hacky way of keeping results table from displaying persistently and limiting the size of the results eventually displayed
-        return this.rankings.filter(player => {
-          return player.toLowerCase().includes(this.search.toLowerCase())
-        })
-      }
-    }
-  },
   methods: {
     setRows (rows) {
       // hide the upload button
@@ -170,27 +170,25 @@ export default {
         // console.log('HEADER: ' + this.colHeaders[idx])
         // rank
         if (this.rankColNames.includes(this.colHeaders[idx].toLowerCase())) {
-          // console.log('FOUND RANK COL: ' + this.colHeaders[idx])
           this.sortBy = this.colHeaders[idx]
         }
 
         // name
         if (this.nameColNames.includes(this.colHeaders[idx].toLowerCase())) {
-          // console.log('FOUND NAME COL: ' + this.colHeaders[idx])
+          this.nameCol = this.colHeaders[idx]
           this.nameColIndex = idx
+        }
+
+        // position
+        if (this.posColNames.includes(this.colHeaders[idx].toLowerCase())) {
+          this.posCol = this.colHeaders[idx]
         }
       }
       this.draftedColumns.push(this.colHeaders[this.nameColIndex]) // name - could possibly go in loop above
-      // console.log('COL HEADERS: %o', this.colHeaders)
     },
     removeFromRankings (row) {
-      // console.log('ROW: %o', row)
-
       this.drafted.splice(0, 0, row)
       this.rankings.splice(this.rankings.indexOf(row), 1)
-
-      // console.log('DRAFTED AFTER ADDITION: %o', this.drafted)
-      this.search = ''
     },
     undraft (row) {
       this.rankings.splice(0, 0, row)
@@ -255,7 +253,7 @@ export default {
 /* banner */
 .hero {
   height: auto; /* grows according to text - won't need updating if I move the instructions*/
-  background: url(./assets/ffb-banner.jpg);
+  background: url(assets/ffb-banner.jpg);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -275,15 +273,6 @@ export default {
   padding: 0 0 0 5px;
   color: orange;
   font-weight: bold;
-}
-
-/* search */
-.search {
-  display: flex;
-  justify-content: center;
-}
-.search results {
-  min-height: 100px;
 }
 
 /* grid for rankings tables*/
@@ -308,10 +297,11 @@ export default {
   background-color: #d6d6d6;
 }
 
-/* table styles since b-table styling isnt working ... */
+/* general table styles since b-table styling isnt working ... */
 table, tr, td {
   border: 1px solid black;
   border-collapse: collapse;
+  background-color: #ffffff; /* in case page bg color is different */
 }
 th {
   font-weight: bold;
