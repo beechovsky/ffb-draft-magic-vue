@@ -72,6 +72,36 @@
         </div>
       </div>
       <!-- END DRAFTED TABLE -->
+
+      <!-- INSTRUCTIONS -->
+      <div class="item instructions">
+        <div style="margin-top: 2.5em;">
+          <th>
+            <tr class="orange">
+              Instructions
+            </tr>
+          </th>
+          <div class="instructions-box">
+            <ul>
+              <li>Upload any rankings <i>.csv</i> file.</li>
+              <li><b>DO NOT REFRESH THE PAGE!</b>
+                <ul>
+                  <li>No database/caching is used currently, so refreshing means starting over.</li>
+                  <li>Browser caching coming in subsequent versions.</li>
+                </ul>
+              </li>
+              <li>Click on a player in the Rankings table if they've been drafted.</li>
+              <li>Click on a player in the Drafted table to return them to Rankings.</li>
+              <li>Type Player Name or Position innto the filter to search.
+                <ul>
+                  <li>Filtering on 'TE' is currently wonky but, really, who cares?</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- END INSTRUCTIONS -->
     </div>
   </div>
 </template>
@@ -202,7 +232,7 @@ export default {
 /* grid settings*/
 .container {
   display: grid;
-  grid-template-columns: 50% 25%;
+  grid-template-columns: 50% 25% 25%; /* rankings, drafted, instructions */
 }
 .item {
   margin: 1em;
@@ -227,5 +257,32 @@ td {
 }
 tr:hover {
   background-color: #d6d6d6;
+}
+
+/* INSTRUCTIONS */
+.item.instructions {
+  position: absolute;
+  right: 0%;
+  max-width: 25%;
+}
+.instructions-box {
+  /*border: 1px solid black;*/
+  background-color: #d6d6d6;
+  padding: .25em;
+}
+ul {
+  margin-top: .2em;
+  margin-left: 1.2em;
+  margin-bottom: .2em;
+  text-align: left;
+}
+ul ul {
+  margin-top: 0;
+  margin-left: .25em;
+  margin-bottom: 0;
+  text-align: left;
+}
+ul, li {
+  padding-left: .25em;
 }
 </style>
