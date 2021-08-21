@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+# NOTE: Not using this, as it is for vue 3 apps. Keeping it in case of a port.
 # abort on errors
 set -e
 
@@ -17,10 +18,9 @@ git add -A
 git commit -m 'deploy'
 
 # if you are deploying to https://<USERNAME>.github.io
-# git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git main
+# git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
 
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
-git push -f git@github.com:beechovsky/ffb-draft-magic-vue.git main:gh-pages
+git push -f git@github.com:beechovsky/ffb-draft-magic.git master:gh-pages
 
 cd -
-#
