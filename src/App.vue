@@ -5,8 +5,6 @@
       <header>
         <br>
         <h1><b>FFB DraftMagic</b></h1>
-        <!-- <p><i>by <a href="https://github.com/beechovsky/ffb-draft-magic-vue" target="_blank">Jeff Bucklew</a></i></p> -->
-        <!-- TODO: include a link for a popup with instructions -->
         <br>
       </header>
     </section>
@@ -16,35 +14,31 @@
     <upload v-if="this.showUpload === true" @load="setRows" id="uploadButton" class="visible"></upload>
     <br>
     <br>
-    <!-- FILTERING -->
-    <!-- https://bootstrap-vue.org/docs/components/table#complete-example -->
-    <!-- END FILTERING -->
 
     <!-- TABLES -->
-    <div v-if="this.rankings.length > 0">
-      <b-form-group
-        label="Filter"
-        label-for="filter-input"
+    <div class="container">
+      <!-- RANKINGS TABLE -->
+      <div v-if="this.rankings.length > 0" class="item">
+        <!-- FILTERING -->
+        <!-- https://bootstrap-vue.org/docs/components/table#complete-example -->
+        <b-form-group
+          label="Filter"
+          label-for="filter-input"
+          class="orange"
+          >
+            <b-input-group>
+              <b-form-input
+                id="filter-input"
+                v-model="filter"
+                type="search"
+                placeholder="Type to Search"
+              ></b-form-input>
+              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
 
-      >
-        <b-input-group>
-          <b-form-input
-            id="filter-input"
-            v-model="filter"
-            type="search"
-            placeholder="Type to Search"
-          ></b-form-input>
-
-          <b-input-group-append>
-            <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-          </b-input-group-append>
-        </b-input-group>
-      </b-form-group>
-    </div>
-    <div v-if="this.rankings.length > 0" class="container">
-      <div class="item">
+            </b-input-group>
+          </b-form-group>
+        <!-- END FILTERING -->
         <th>
-        <!-- TODO: investigate captions -->
           <tr class="orange">
             Rankings
           </tr>
@@ -58,19 +52,26 @@
             :items="this.rankings"
             :fields="this.colHeaders"
             @row-clicked="removeFromRankings"
-            ></b-table>
+            >
+          </b-table>
         </div>
       </div>
-      <div class="item">
-        <th>
-          <tr class="orange">
-            Drafted
-          </tr>
-        </th>
-        <div>
-          <b-table :items="this.drafted" :fields="this.draftedColumns" @row-clicked="undraft"></b-table>
+      <!-- END RANKINGS TABLE -->
+
+      <!-- DRAFTED TABLE -->
+      <div v-if="this.rankings.length > 0" class="item">
+        <div style="margin-top: 2.5em;">
+          <th>
+            <tr class="orange">
+              Drafted
+            </tr>
+          </th>
+          <div>
+            <b-table :items="this.drafted" :fields="this.draftedColumns" @row-clicked="undraft"></b-table>
+          </div>
         </div>
       </div>
+      <!-- END DRAFTED TABLE -->
     </div>
   </div>
 </template>
@@ -81,46 +82,45 @@ import Upload from './components/Upload'
 export default {
   name: 'app',
   data: () => ({
-    // big upload button
+    // upload button
     showUpload: true,
 
     // tables
+    // b-table :items
     rankings: [],
     drafted: [],
 
-    // used as fields - may need extra optinos for filtering
+    // b-table :fields - may need extra options for styling
     // see: https://bootstrap-vue.org/docs/components/table#complete-example
     colHeaders: [], // useful for smaller drafted table and grokking sheets wih disparate formats
     draftedColumns: [],
 
-    sortBy: null, // whatever rank is called; determined below, b-table and filter need field name not index
+    // important/useful columns processing
     nameCol: null, // determined below; used in filter
     nameColIndex: null, // determined below
     posCol: null, // determined below; used in filter
-    // common col headers for important/useful columns
-    rankColNames: ['ranking', 'rank', 'rk', 'rk.', 'overall', 'ovr', 'ovr.'],
-    nameColNames: ['player name', 'player', 'name', 'nm', 'nm.'],
+    rankColNames: ['ranking', 'rank', 'rk', 'rk.', 'overall', 'ovr', 'ovr.', 'player rank', 'player.rank'],
+    nameColNames: ['player name', 'player.name', 'player', 'name', 'nm', 'nm.'],
     posColNames: ['position', 'pos.', 'pos'],
 
-    // table filtering
+    // table sorting/filtering
+    sortBy: null, // whatever rank is called; determined below, b-table and filter need :field name not index
     sortDirection: 'asc',
     filter: null,
-    filterOn: [],
-    hover: true
+    filterOn: []
   }),
   methods: {
     setRows (rows) {
       // hide the upload button
       this.showUpload = false
 
-      // update wider-scoped var
+      // set wider-scoped var for populating main rankings table
       this.rankings = rows
 
-      // get columns headers for use as b-table fields and for determining rank and name fields, upon which we'll operate
+      // get column headers for use as b-table :fields and for determining rank and name fields, upon which we'll operate
       this.colHeaders = Object.keys(this.rankings[0])
       // determine rank and name columns
       for (var idx in this.colHeaders) {
-        // console.log('HEADER: ' + this.colHeaders[idx])
         // rank
         if (this.rankColNames.includes(this.colHeaders[idx].toLowerCase())) {
           this.sortBy = this.colHeaders[idx]
@@ -137,6 +137,8 @@ export default {
           this.posCol = this.colHeaders[idx]
         }
       }
+
+      // populate drafted table :items var
       this.draftedColumns.push(this.colHeaders[this.nameColIndex]) // name - could possibly go in loop above
     },
     removeFromRankings (row) {
@@ -146,35 +148,6 @@ export default {
     undraft (row) {
       this.rankings.splice(0, 0, row)
       this.drafted.splice(this.drafted.indexOf(row), 1)
-    },
-    mergeSort (arr) {
-      if (arr.length < 2) {
-        return arr
-      }
-
-      let middle = parseInt(arr.length / 2)
-      let left = arr.slice(0, middle)
-      let right = arr.slice(middle, arr.length)
-
-      return this.merge(this.mergeSort(left), this.mergeSort(right))
-    },
-    merge (left, right) {
-      let result = []
-
-      while (left.length && right.length) {
-        if (parseInt(left[0].split(',')[0]) <= parseInt(right[0].split(',')[0])) {
-          result.push(left.shift())
-        } else {
-          result.push(right.shift())
-        }
-      }
-      while (left.length) {
-        result.push(left.shift())
-      }
-      while (right.length) {
-        result.push(right.shift())
-      }
-      return result
     }
   },
   components: {
@@ -197,10 +170,7 @@ export default {
 
 /* Basic mobile styling */
 @media screen and (max-width: 640px) {
-  /* hide positional tables */
-  .child {
-    display: none;
-  }
+  /* probably hide drafted table */
 }
 
 /* banner */
@@ -211,13 +181,13 @@ export default {
   background-size: cover;
   background-repeat: no-repeat;
   color: white;
-  font-size: xx-large;
+  /* font-size: x-large;*/
 }
 
 .hero h1 {
   color: #fff;
   text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
-  font: 100px 'ChunkFiveRegular';
+  font: xx-large 'ChunkFiveRegular';
 }
 
 /* for headers and labels */
@@ -226,9 +196,10 @@ export default {
   padding: 0 0 0 5px;
   color: orange;
   font-weight: bold;
+  background-color: #ffffff;
 }
 
-/* grid for rankings tables*/
+/* grid settings*/
 .container {
   display: grid;
   grid-template-columns: 50% 25%;
@@ -240,11 +211,12 @@ export default {
 /* general table styles since b-table styling isnt working ... */
 table {
   min-width: 100%;
+  background-color: #ffffff; /* in case page bg color is different */
 }
+
 table, tr, td {
   border: 1px solid black;
   border-collapse: collapse;
-  background-color: #ffffff; /* in case page bg color is different */
 }
 th {
   font-weight: bold;
