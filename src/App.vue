@@ -38,11 +38,9 @@
             </b-input-group>
           </b-form-group>
         <!-- END FILTERING -->
-        <th>
-          <tr class="orange">
-            Rankings
-          </tr>
-        </th>
+        <div class="orange" style="text-align: left; padding-left: 0;">
+          Rankings
+        </div>
         <div>
           <b-table
             :filter="filter"
@@ -61,11 +59,9 @@
       <!-- DRAFTED TABLE -->
       <div v-if="this.rankings.length > 0" class="item">
         <div style="margin-top: 2.5em;">
-          <th>
-            <tr class="orange">
+          <div class="orange" style="text-align: left; padding-left: 0;">
               Drafted
-            </tr>
-          </th>
+          </div>
           <div>
             <b-table :items="this.drafted" :fields="this.draftedColumns" @row-clicked="undraft"></b-table>
           </div>
@@ -76,11 +72,9 @@
       <!-- INSTRUCTIONS -->
       <div class="item">
         <div class="item instructions" style="margin-top: 2.5em;">
-          <th>
-            <tr class="orange">
+          <div class="orange" style="text-align: left; padding-left: 0;">
               Instructions
-            </tr>
-          </th>
+          </div>
           <div class="instructions-box">
             <ul>
               <li>Upload any rankings <i>.csv</i> file.</li>
