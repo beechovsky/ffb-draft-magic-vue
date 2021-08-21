@@ -1,14 +1,29 @@
 <template>
-  <label class='upload-button'>
-    <h1>Upload Rankings CSV</h1>
-    <input type='file' @change='getFile'>
-  </label>
+  <div>
+    <label class='upload-button'>
+      <h1>Upload Rankings CSV</h1>
+      <input ref='upload' type='file' @click='resetUpload' @change='getFile'>
+    </label>
+    <div v-if="error" id="error">
+      <p><span class="error">{{errorMsg}}</span></p>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'Upload',
+  data: () => ({
+    error: false,
+    errorMsg: ''
+  }),
   methods: {
+    // in case resubmitting the same file to restart
+    resetUpload () {
+      this.$refs.upload.value = ''
+      this.error = false
+      this.errorMsg = ''
+    },
     parseFile (file) {
       let rows = null
       // let errors = null
@@ -37,12 +52,17 @@ export default {
       }
 
       let file = event.target.files[0]
+      console.log('FILE: %o', file)
 
-      // unsure this stuff is necessary with papa
-      let reader = new FileReader()
+      if (file.type === 'text/csv') {
+        let reader = new FileReader()
 
-      reader.onload = e => this.parseFile(e.target.result)
-      reader.readAsText(file)
+        reader.onload = e => this.parseFile(e.target.result)
+        reader.readAsText(file)
+      } else {
+        this.error = true
+        this.errorMsg = 'That ain\'t it, boss. Try a .csv file.'
+      }
     }
   }
 }
@@ -69,5 +89,12 @@ export default {
   left: 0;
   z-index: -1;
   opacity: 0;
+}
+.error {
+  color: red;
+  border: 1px solid red;
+  border-radius: 1px;
+  background-color: pink;
+  padding: .2em;
 }
 </style>

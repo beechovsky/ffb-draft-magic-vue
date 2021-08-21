@@ -74,8 +74,8 @@
       <!-- END DRAFTED TABLE -->
 
       <!-- INSTRUCTIONS -->
-      <div class="item instructions">
-        <div style="margin-top: 2.5em;">
+      <div class="item">
+        <div class="item instructions" style="margin-top: 2.5em;">
           <th>
             <tr class="orange">
               Instructions
@@ -92,11 +92,12 @@
               </li>
               <li>Click on a player in the Rankings table if they've been drafted.</li>
               <li>Click on a player in the Drafted table to return them to Rankings.</li>
-              <li>Type Player Name or Position innto the filter to search.
+              <li>Type Player Name or Position into the Filter to search.
                 <ul>
                   <li>Filtering on 'TE' is currently wonky but, really, who cares?</li>
                 </ul>
               </li>
+              <li>To start over, upload a new .csv file or refresh the page.</li>
             </ul>
           </div>
         </div>
@@ -141,8 +142,8 @@ export default {
   }),
   methods: {
     setRows (rows) {
-      // hide the upload button
-      this.showUpload = false
+      // hide the upload button - currently disbled to allow restart w/o refreshing page, and to keep elements from "jumping"
+      // this.showUpload = false
 
       // set wider-scoped var for populating main rankings table
       this.rankings = rows
@@ -169,6 +170,12 @@ export default {
       }
 
       // populate drafted table :items var
+      // clear table in case of re-upload
+      for (var draftee in this.drafted) {
+        this.drafted.splice(this.drafted[draftee], 1)
+      }
+      this.drafted.length = 0
+      this.draftedColumns.length = 0
       this.draftedColumns.push(this.colHeaders[this.nameColIndex]) // name - could possibly go in loop above
     },
     removeFromRankings (row) {
@@ -263,12 +270,13 @@ tr:hover {
 .item.instructions {
   position: absolute;
   right: 0%;
-  max-width: 25%;
+  max-width: 23%;
 }
 .instructions-box {
   /*border: 1px solid black;*/
   background-color: #d6d6d6;
   padding: .25em;
+  border-radius: 5px;
 }
 ul {
   margin-top: .2em;
@@ -284,5 +292,11 @@ ul ul {
 }
 ul, li {
   padding-left: .25em;
+}
+li {
+  margin-top: .1em;
+  margin-left: .1em;
+  margin-bottom: .1em;
+  padding-left: 0;
 }
 </style>
