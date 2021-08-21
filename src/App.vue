@@ -17,15 +17,15 @@
 
     <!-- TABLES -->
     <div class="container">
-      <!-- RANKINGS TABLE -->
-      <div v-if="this.rankings.length > 0" class="item">
-        <!-- FILTERING -->
-        <!-- https://bootstrap-vue.org/docs/components/table#complete-example -->
-        <b-form-group
-          label="Filter"
-          label-for="filter-input"
-          class="orange"
-          >
+      <!-- FILTERING -->
+      <!-- https://bootstrap-vue.org/docs/components/table#complete-example -->
+      <div class="item-filter">
+        <div v-if="this.rankings.length > 0">
+          <b-form-group
+            label="Filter"
+            label-for="filter-input"
+            class="orange"
+            >
             <b-input-group>
               <b-form-input
                 id="filter-input"
@@ -37,7 +37,12 @@
 
             </b-input-group>
           </b-form-group>
-        <!-- END FILTERING -->
+        </div>
+      <!-- END FILTERING -->
+      </div>
+
+      <!-- RANKINGS TABLE -->
+      <div v-if="this.rankings.length > 0" class="item-rankings">
         <div class="orange" style="text-align: left; padding-left: 0;">
           Rankings
         </div>
@@ -57,8 +62,8 @@
       <!-- END RANKINGS TABLE -->
 
       <!-- DRAFTED TABLE -->
-      <div v-if="this.rankings.length > 0" class="item">
-        <div style="margin-top: 2.5em;">
+      <div v-if="this.rankings.length > 0" class="item-drafted">
+        <div>
           <div class="orange" style="text-align: left; padding-left: 0;">
               Drafted
           </div>
@@ -70,8 +75,8 @@
       <!-- END DRAFTED TABLE -->
 
       <!-- INSTRUCTIONS -->
-      <div class="item">
-        <div class="item instructions" style="margin-top: 2.5em;">
+      <div class="item-instructions">
+        <div class="item instructions">
           <div class="orange" style="text-align: left; padding-left: 0;">
               Instructions
           </div>
@@ -234,8 +239,29 @@ export default {
 .container {
   display: grid;
   grid-template-columns: 50% 25% 25%; /* rankings, drafted, instructions */
+  grid-template-rows: 3em auto; /* two rows, one to isolate filter above tables/instructions */
 }
-.item {
+.item-filter {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  margin: 1em;
+}
+.item-rankings {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  margin: 1em;
+}
+.item-drafted {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  margin: 1em;
+}
+.item-instructions {
+  grid-column-start: 3;
+  grid-row-start: 2;
   margin: 1em;
 }
 
