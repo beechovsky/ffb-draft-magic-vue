@@ -91,7 +91,7 @@
               </li>
               <li>Click on a player in the Rankings table if they've been drafted.</li>
               <li>Click on a player in the Drafted table to return them to Rankings.</li>
-              <li>Type Player Name or Position into the Filter to search.
+              <li>Type a player's name or position into the Filter to search.
                 <ul>
                   <li>Filtering on 'TE' is currently wonky but, really, who cares?</li>
                 </ul>
