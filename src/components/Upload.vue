@@ -93,8 +93,9 @@ export default {
 .error {
   color: red;
   border: 1px solid red;
-  border-radius: 1px;
+  border-radius: 2px;
   background-color: pink;
-  padding: .2em;
+  padding: .2em .3em .2em;
+  font-size: large;
 }
 </style>
