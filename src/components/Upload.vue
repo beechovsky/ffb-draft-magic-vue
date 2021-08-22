@@ -52,12 +52,13 @@ export default {
       }
 
       let file = event.target.files[0]
-      // console.log('FILE: %o', file)
+      console.log('FILE: %o', file)
 
       let isCsv = this.isCsvFile(file)
 
       // chrome on windows doesn't recognize file type ...
       if (isCsv) {
+        console.log('WE HAVE A CSV.')
         let reader = new FileReader()
 
         reader.onload = e => this.parseFile(e.target.result)
@@ -70,12 +71,13 @@ export default {
     isCsvFile (file) {
       let isACsv = false
 
+      console.log('FILE TYPE: ' + file.type)
       if (file.type === 'text/csv') {
         isACsv = true
       }
 
       // deal with chrome on windows not recognizing file.type ...
-      // console.log('FILE NAME: ' + file.name.split('.')[1])
+      console.log('FILE NAME: ' + file.name.split('.')[1])
       if (file.name.split('.')[1] === 'csv') {
         isACsv = true
       }
