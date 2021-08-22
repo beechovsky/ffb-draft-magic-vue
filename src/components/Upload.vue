@@ -2,7 +2,7 @@
   <div>
     <label class='upload-button'>
       <h1>Upload Rankings CSV</h1>
-      <input ref='upload' type='file' @click='resetUpload' @change='getFile'>
+      <input ref='upload' type='file' @click='resetUpload' @change='getFile' required>
     </label>
     <div v-if="error" id="error">
       <p><span class="error">{{errorMsg}}</span></p>
@@ -52,9 +52,12 @@ export default {
       }
 
       let file = event.target.files[0]
-      console.log('FILE: %o', file)
+      // console.log('FILE: %o', file)
 
-      if (file.type === 'text/csv') {
+      let isCsv = this.isCsvFile(file)
+
+      // chrome on windows doesn't recognize file type ...
+      if (isCsv) {
         let reader = new FileReader()
 
         reader.onload = e => this.parseFile(e.target.result)
@@ -63,6 +66,21 @@ export default {
         this.error = true
         this.errorMsg = 'That ain\'t it, boss. Try a .csv file.'
       }
+    },
+    isCsvFile (file) {
+      let isACsv = false
+
+      if (file.type === 'text/csv') {
+        isACsv = true
+      }
+
+      // deal with chrome on windows not recognizing file.type ...
+      // console.log('FILE NAME: ' + file.name.split('.')[1])
+      if (file.name.split('.')[1] === 'csv') {
+        isACsv = true
+      }
+
+      return isACsv
     }
   }
 }

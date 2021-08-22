@@ -147,13 +147,13 @@ export default {
       // set wider-scoped var for populating main rankings table
       this.rankings = rows
 
-      // get column headers for use as b-table :fields and for determining rank and name fields, upon which we'll operate
+      // for b-table :fields and for determining rank, name, and position fields, upon which we'll operate
       this.colHeaders = Object.keys(this.rankings[0])
       // determine rank and name columns
       for (var idx in this.colHeaders) {
         // rank
         if (this.rankColNames.includes(this.colHeaders[idx].toLowerCase())) {
-          this.sortBy = this.colHeaders[idx]
+          this.sortBy = this.colHeaders[idx] // sort by overall rank
         }
 
         // name
@@ -169,13 +169,14 @@ export default {
       }
 
       // populate drafted table :items var
-      // clear table in case of re-upload
+      // clear table in case of re-upload of same sheet (likely)
       for (var draftee in this.drafted) {
         this.drafted.splice(this.drafted[draftee], 1)
       }
-      this.drafted.length = 0
+      this.drafted.length = 0 // length is r/w. weird.
+
       this.draftedColumns.length = 0
-      this.draftedColumns.push(this.colHeaders[this.nameColIndex]) // name - could possibly go in loop above
+      this.draftedColumns.push(this.colHeaders[this.nameColIndex])
     },
     removeFromRankings (row) {
       this.drafted.splice(0, 0, row)
