@@ -206,19 +206,22 @@ export default {
 }
 
 /* Basic mobile styling */
-@media screen and (max-width: 640px) {
+/* @media screen and (max-width: 640px) { */
   /* probably hide drafted table */
-}
+/* } */
 
 /* banner */
 .hero {
   height: auto; /* grows according to text - won't need updating if I move the instructions*/
-  background: url(assets/ffb-banner.jpg);
-  background-position: center;
+  background: url(assets/ffb-banner.jpg) center;
   background-size: cover;
-  background-repeat: no-repeat;
-  color: white;
+  color: white; /* for other text */
   /* font-size: x-large;*/
+
+  /* Grid styles */
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
 .hero h1 {
@@ -239,46 +242,51 @@ export default {
 /* grid settings*/
 .container {
   display: grid;
-  grid-template-columns: 50% 25% 25%; /* rankings, drafted, instructions */
-  grid-template-rows: 3em auto; /* two rows, one to isolate filter above tables/instructions */
+  /* grid-template-columns: 50% 25% 25%; */ /* rankings, drafted, instructions */
+  /* grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); */
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 3em repeat(3, auto); /* 3 rows, one to isolate filter above tables/instructions and one for overflow */
+  grid-gap: 1rem;
+  grid-auto-flow: dense;
 }
 .item-filter {
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
-  margin: 1em;
+  grid-row-end: 2;
 }
 .item-rankings {
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 2;
-  margin: 1em;
 }
 .item-drafted {
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 2;
-  margin: 1em;
 }
 .item-instructions {
   grid-column-start: 3;
   grid-row-start: 2;
-  margin: 1em;
 }
 
 /* general table styles since b-table styling isnt working ... */
 table {
   min-width: 100%;
   background-color: #ffffff; /* in case page bg color is different */
+  position: relative;
 }
 
 table, tr, td {
   border: 1px solid black;
   border-collapse: collapse;
 }
-th {
+
+th { /* may need these ahead of th: table thead  */
   font-weight: bold;
   background-color: #d6d6d6;
+  /* position: sticky;
+  top: 0; */
 }
 td {
   padding: 1px 2px 1px 2px;
@@ -289,12 +297,9 @@ tr:hover {
 
 /* INSTRUCTIONS */
 .item.instructions {
-  position: absolute;
-  right: 0%;
-  max-width: 23%;
+  position: relative;
 }
 .instructions-box {
-  /*border: 1px solid black;*/
   background-color: #d6d6d6;
   padding: .25em;
   border-radius: 5px;
