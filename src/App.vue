@@ -85,8 +85,7 @@
               <li>Upload any rankings <i>.csv</i> file.</li>
               <li><b>DO NOT REFRESH THE PAGE!</b>
                 <ul>
-                  <li>No database/caching is used currently, so refreshing means starting over.</li>
-                  <li>Browser caching coming in subsequent versions.</li>
+                  <li>Refreshing means starting over.</li>
                 </ul>
               </li>
               <li>Click on a player in the Rankings table if they've been drafted.</li>
@@ -215,10 +214,10 @@ export default {
   height: auto; /* grows according to text - won't need updating if I move the instructions*/
   background: url(assets/ffb-banner.jpg) center;
   background-size: cover;
-  color: white; /* for other text */
+  /* for non h1 text */
+  color: white;
   /* font-size: x-large;*/
 
-  /* Grid styles */
   display: grid;
   align-items: center;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -234,6 +233,7 @@ export default {
 .orange {
   border: none;
   padding: 0 0 0 5px;
+  margin-bottom: .1em;
   color: orange;
   font-weight: bold;
   background-color: #ffffff;
@@ -242,10 +242,8 @@ export default {
 /* grid settings*/
 .container {
   display: grid;
-  /* grid-template-columns: 50% 25% 25%; */ /* rankings, drafted, instructions */
-  /* grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); */
-  grid-template-columns: 2fr 1fr 1fr;
-  grid-template-rows: 3em repeat(3, auto); /* 3 rows, one to isolate filter above tables/instructions and one for overflow */
+  grid-template-columns: 2fr repeat(2, 1fr);
+  grid-template-rows: 2em repeat(3, auto); /* 3 rows: one to isolate filter above tables/instructions and one for overflow */
   grid-gap: 1rem;
   grid-auto-flow: dense;
 }
@@ -272,7 +270,8 @@ export default {
 
 /* general table styles since b-table styling isnt working ... */
 table {
-  min-width: 100%;
+  /* min-width: 100%; */
+  width: 100%;
   background-color: #ffffff; /* in case page bg color is different */
   position: relative;
 }
@@ -301,28 +300,34 @@ tr:hover {
 }
 .instructions-box {
   background-color: #d6d6d6;
-  padding: .25em;
   border-radius: 5px;
 }
 ul {
-  margin-top: .2em;
-  margin-left: 1.2em;
-  margin-bottom: .2em;
+  margin-top: 0;
+  margin-left: 1.25em;
+  margin-bottom: 0;
   text-align: left;
+  padding: .25em .25em .2em .2em;
 }
 ul ul {
   margin-top: 0;
-  margin-left: .25em;
+  margin-left: .5em;
   margin-bottom: 0;
   text-align: left;
 }
-ul, li {
-  padding-left: .25em;
+ul li {
+  padding: 0;
+}
+ul ul li {
+  margin-top: 0;
+  margin-left: 0;
+  margin-bottom: 0;
+  padding: 0;
 }
 li {
-  margin-top: .1em;
-  margin-left: .1em;
-  margin-bottom: .1em;
-  padding-left: 0;
+  margin-top: 0;
+  margin-left: 0;
+  margin-bottom: 0;
+  padding: 0;
 }
 </style>
