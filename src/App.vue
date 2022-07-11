@@ -75,29 +75,27 @@
       <!-- END DRAFTED TABLE -->
 
       <!-- INSTRUCTIONS -->
-      <div class="item-instructions">
-        <div class="item instructions">
-          <div class="orange" style="text-align: left; padding-left: 0;">
-              Instructions
-          </div>
-          <div class="instructions-box">
-            <ul>
-              <li>Upload any rankings <i>.csv</i> file.</li>
-              <li><b>DO NOT REFRESH THE PAGE!</b>
-                <ul>
-                  <li>Refreshing means starting over.</li>
-                </ul>
-              </li>
-              <li>Click on a player in the Rankings table if they've been drafted.</li>
-              <li>Click on a player in the Drafted table to return them to Rankings.</li>
-              <li>Type a player's name or position into the Filter to search.
-                <ul>
-                  <li>Filtering on 'TE' is currently wonky but, really, who cares?</li>
-                </ul>
-              </li>
-              <li>To start over, upload a new .csv file or refresh the page.</li>
-            </ul>
-          </div>
+      <div class="item-instructions" id="instructions">
+        <div class="orange" style="text-align: left; padding-left: 0;">
+            Instructions
+        </div>
+        <div class="instructions-box">
+          <ul>
+            <li>Upload any rankings <i>.csv</i> file.</li>
+            <li><b>DO NOT REFRESH THE PAGE!</b>
+              <ul>
+                <li>Refreshing means starting over.</li>
+              </ul>
+            </li>
+            <li>Click on a player in the Rankings table if they've been drafted.</li>
+            <li>Click on a player in the Drafted table to return them to Rankings.</li>
+            <li>Type a player's name or position into the Filter to search.
+              <ul>
+                <li>Filtering on 'TE' is currently wonky but, really, who cares?</li>
+              </ul>
+            </li>
+            <li>To start over, upload a new .csv file or refresh the page.</li>
+          </ul>
         </div>
       </div>
       <!-- END INSTRUCTIONS -->
@@ -205,9 +203,10 @@ export default {
 }
 
 /* Basic mobile styling */
-/* @media screen and (max-width: 640px) { */
-  /* probably hide drafted table */
-/* } */
+@media screen and (max-width: 640px) {
+  /* hide  instructions */
+  #instructions { display: none; }
+}
 
 /* banner */
 .hero {
