@@ -101,8 +101,8 @@
         </div>
       </div>
       <!-- END INSTRUCTIONS -->
-    </div>
-  </div>
+    </div> <!-- container -->
+  </div> <!-- app -->
 </template>
 
 <script>
@@ -194,7 +194,7 @@ export default {
 
 <style>
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: "Ubuntu", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -216,7 +216,6 @@ export default {
   background-size: cover;
   /* for non h1 text */
   color: white;
-  /* font-size: x-large;*/
 
   display: grid;
   align-items: center;
@@ -226,7 +225,7 @@ export default {
 .hero h1 {
   color: #fff;
   text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
-  font: xx-large 'ChunkFiveRegular';
+  font-size: xxx-large;
 }
 
 /* for headers and labels */
@@ -234,7 +233,7 @@ export default {
   border: none;
   padding: 0 0 0 5px;
   margin-bottom: .1em;
-  color: orange;
+  color: black;
   font-weight: bold;
   background-color: #ffffff;
 }
