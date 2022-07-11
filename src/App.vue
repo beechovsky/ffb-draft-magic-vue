@@ -24,7 +24,7 @@
           <b-form-group
             label="Filter"
             label-for="filter-input"
-            class="orange"
+            class="section-header"
             >
             <b-input-group>
               <b-form-input
@@ -43,7 +43,7 @@
 
       <!-- RANKINGS TABLE -->
       <div v-if="this.rankings.length > 0" class="item-rankings">
-        <div class="orange" style="text-align: left; padding-left: 0;">
+        <div class="section-header" style="text-align: left; padding-left: 0;">
           Rankings
         </div>
         <div>
@@ -64,7 +64,7 @@
       <!-- DRAFTED TABLE -->
       <div v-if="this.rankings.length > 0" class="item-drafted">
         <div>
-          <div class="orange" style="text-align: left; padding-left: 0;">
+          <div class="section-header" style="text-align: left; padding-left: 0;">
               Drafted
           </div>
           <div>
@@ -76,18 +76,18 @@
 
       <!-- INSTRUCTIONS -->
       <div class="item-instructions" id="instructions">
-        <div class="orange" style="text-align: left; padding-left: 0;">
+        <div class="section-header" style="text-align: left; padding-left: 0;">
             Instructions
         </div>
         <div class="instructions-box">
           <ul>
             <li>Upload any rankings <i>.csv</i> file.</li>
-            <li><b>DO NOT REFRESH THE PAGE!</b>
+            <li><i>DO NOT REFRESH THE PAGE!</i>
               <ul>
                 <li>Refreshing means starting over.</li>
               </ul>
             </li>
-            <li>Click on a player in the Rankings table if they've been drafted.</li>
+            <li>Click on a player in the Rankings table to draft them.</li>
             <li>Click on a player in the Drafted table to return them to Rankings.</li>
             <li>Type a player's name or position into the Filter to search.
               <ul>
@@ -228,7 +228,7 @@ export default {
 }
 
 /* for headers and labels */
-.orange {
+.section-header {
   border: none;
   padding: 0 0 0 5px;
   margin-bottom: .1em;
@@ -302,19 +302,18 @@ tr:hover {
 }
 ul {
   margin-top: 0;
-  margin-left: 1.25em;
-  margin-bottom: 0;
+  margin-left: 1.5em;
   text-align: left;
-  padding: .25em .25em .2em .2em;
+  padding: .1em .2em .1em 0em;
 }
 ul ul {
   margin-top: 0;
-  margin-left: .5em;
+  margin-left: .6em;
   margin-bottom: 0;
   text-align: left;
 }
 ul li {
-  padding: 0;
+  padding:.1em 0 .1em 0;
 }
 ul ul li {
   margin-top: 0;
