@@ -13,7 +13,6 @@
     <br>
     <upload v-if="this.showUpload === true" @load="setRows" id="uploadButton" class="visible"></upload>
     <br>
-    <br>
 
     <!-- TABLES -->
     <div class="container">
@@ -87,8 +86,8 @@
                 <li>Refreshing means starting over.</li>
               </ul>
             </li>
-            <li>Click on a player in the Rankings table to draft them.</li>
-            <li>Click on a player in the Drafted table to return them to Rankings.</li>
+            <li>Click on a player in the <b>Rankings</b> table to draft them.</li>
+            <li>Click on a player in the <b>Drafted</b> table to return them to Rankings.</li>
             <li>Type a player's name or position into the Filter to search.
               <ul>
                 <li>Filtering on 'TE' is currently wonky but, really, who cares?</li>
