@@ -203,7 +203,7 @@ export default {
 }
 
 /* Basic mobile styling */
-@media screen and (max-width: 640px) {
+@media screen and (max-width: 768px) {
   /* hide  instructions */
   #instructions { display: none; }
 }
