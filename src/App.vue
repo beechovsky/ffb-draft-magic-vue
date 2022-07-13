@@ -122,9 +122,11 @@ export default {
     draftedColumns: [],
 
     // important/useful columns processing
-    nameCol: null, // determined below; used in filter
-    nameColIndex: null, // determined below
-    posCol: null, // determined below; used in filter
+    nameCol: null, // used in filter
+    nameColIndex: null,
+    posCol: null, // used in filter
+    byeCol: null,
+    byeColIndex: null,
     rankColNames: ['ranking', 'rank', 'rk', 'rk.', 'overall', 'ovr', 'ovr.', 'player rank', 'player.rank'],
     nameColNames: ['player name', 'player.name', 'player', 'name', 'nm', 'nm.'],
     posColNames: ['position', 'pos.', 'pos'],
@@ -162,6 +164,12 @@ export default {
         if (this.posColNames.includes(this.colHeaders[idx].toLowerCase())) {
           this.posCol = this.colHeaders[idx]
         }
+
+        // bye
+        if (this.colHeaders[idx].toLowerCase() === 'bye') {
+          this.byeCol = this.colHeaders[idx]
+          this.byeColIndex = idx
+        }
       }
 
       // populate drafted table :items var
@@ -173,6 +181,9 @@ export default {
 
       this.draftedColumns.length = 0
       this.draftedColumns.push(this.colHeaders[this.nameColIndex])
+      if (this.byeCol !== null) {
+        this.draftedColumns.push(this.colHeaders[this.byeColIndex])
+      }
     },
     removeFromRankings (row) {
       this.drafted.splice(0, 0, row)
