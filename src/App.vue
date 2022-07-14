@@ -79,7 +79,11 @@
               Drafted
           </div>
           <div>
-            <b-table :items="this.removed" :fields="this.removedColumns" @row-clicked="putBack"></b-table>
+            <b-table
+              :items="this.removed"
+              :fields="this.removedColumns"
+              @row-clicked="putBack">
+             </b-table>
           </div>
         </div>
       </div>
@@ -92,7 +96,11 @@
               Drafted by You
           </div>
           <div>
-            <b-table :items="this.drafted" :fields="this.draftedColumns" @row-clicked="undraft"></b-table>
+            <b-table
+              :items="this.drafted"
+              :fields="this.draftedColumns"
+              @row-clicked="undraft">
+            </b-table>
           </div>
         </div>
       </div>
