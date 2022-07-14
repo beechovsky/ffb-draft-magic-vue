@@ -40,6 +40,14 @@
       </div>
       <!-- END FILTERING -->
 
+      <!-- INSTRUCTIONS -->
+      <div v-if="this.rankings.length > 0" class="item-instructions" id="instructions">
+        <div class="section-header" style="text-align: center; padding-left: 0;">
+          Click a player below to return them to main table.
+        </div>
+      </div>
+      <!-- END INSTRUCTIONS -->
+
       <!-- RANKINGS TABLE -->
       <div v-if="this.rankings.length > 0" class="item-rankings" id="rankings">
         <div class="section-header" style="text-align: left; padding-left: 0;">
@@ -231,13 +239,13 @@ export default {
 
 /* Basic mobile styling */
 @media screen and (max-width: 540px) {
-  /* hide  instructions */
-  #removed, #drafted { display: none; }
+  /* hide  secondary tables on mobile */
+  #removed, #drafted, #instructions { display: none; }
 }
 
 /* banner */
 .hero {
-  height: auto; /* grows according to text - won't need updating if I move the instructions*/
+  height: auto;
   background: url(assets/ffb-banner.jpg) center;
   background-size: cover;
   /* for non h1 text */
@@ -275,6 +283,12 @@ export default {
 .item-filter {
   grid-column-start: 1;
   grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+.item-instructions {
+  grid-column-start: 2;
+  grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 2;
 }
