@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <label class='upload-button'>
+<div class="upload-container">
+  <div class="upload-button">
+    <label class='upload-label'>
       <h1>Upload Rankings CSV</h1>
       <input ref='upload' type='file' @click='resetUpload' @change='getFile' required>
     </label>
@@ -8,6 +9,7 @@
       <p><span class="error">{{errorMsg}}</span></p>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -26,23 +28,15 @@ export default {
     },
     parseFile (file) {
       let rows = null
-      // let errors = null
-      // let meta = null
 
       // parse with papa
       this.$papa.parse(file, {
         header: true,
         complete: function (results) {
           rows = results.data
-          // errors = results.errors
-          // meta = results.meta
-          // console.log('ROWS: %o', rows)
-          // console.log('ERRORS: %o', errors)
-          // console.log('META: %o', meta)
         }
       })
 
-      // should also send errors and meta
       // sets parent component's @load method params to rows
       this.$emit('load', rows)
     },
@@ -52,13 +46,11 @@ export default {
       }
 
       let file = event.target.files[0]
-      // console.log('FILE: %o', file)
 
       let isCsv = this.isCsvFile(file)
 
       // chrome on windows doesn't recognize file type ...
       if (isCsv) {
-        // console.log('WE HAVE A CSV.')
         let reader = new FileReader()
 
         reader.onload = e => this.parseFile(e.target.result)
@@ -71,13 +63,11 @@ export default {
     isCsvFile (file) {
       let isACsv = false
 
-      // console.log('FILE TYPE: ' + file.type)
       if (file.type === 'text/csv') {
         isACsv = true
       }
 
       // deal with chrome on windows not recognizing file.type ...
-      // console.log('FILE NAME: ' + file.name.split('.')[1])
       if (file.name.split('.')[1] === 'csv') {
         isACsv = true
       }
@@ -89,7 +79,17 @@ export default {
 </script>
 
 <style>
+.upload-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 1;
+}
 .upload-button {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+}
+.upload-label {
   position: relative;
   overflow: hidden;
   display: inline-block;
@@ -100,7 +100,8 @@ export default {
   padding: 8px 12px;
   cursor: pointer;
 }
-.upload-button:hover {
+.upload-label:hover {
+  position: relative;
   background-color: #d6d6d6;
 }
 .upload-button input {

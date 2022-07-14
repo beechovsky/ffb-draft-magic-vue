@@ -30,18 +30,18 @@
                 id="filter-input"
                 v-model="filter"
                 type="search"
-                placeholder="Type to Search"
+                placeholder="'QB', 'Smith', etc."
               ></b-form-input>
               <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
 
             </b-input-group>
           </b-form-group>
         </div>
-      <!-- END FILTERING -->
       </div>
+      <!-- END FILTERING -->
 
       <!-- RANKINGS TABLE -->
-      <div v-if="this.rankings.length > 0" class="item-rankings">
+      <div v-if="this.rankings.length > 0" class="item-rankings" id="rankings">
         <div class="section-header" style="text-align: left; padding-left: 0;">
           Rankings
         </div>
@@ -53,51 +53,44 @@
             :sort-by.sync="sortBy"
             :items="this.rankings"
             :fields="this.colHeaders"
-            @row-clicked="removeFromRankings"
             >
+            <template v-slot:cell(remove)="{ item }">
+              <span><b-button variant="primary" @click="removeFromRankings(item)">Remove</b-button></span>
+            </template>
+            <template v-slot:cell(draft)="{ item }">
+              <span><b-button variant="secondary" @click="draft(item)">Draft</b-button></span>
+            </template>
           </b-table>
         </div>
       </div>
       <!-- END RANKINGS TABLE -->
 
-      <!-- DRAFTED TABLE -->
-      <div v-if="this.rankings.length > 0" class="item-drafted">
+      <!-- REMOVED TABLE -->
+      <div v-if="this.rankings.length > 0" class="item-removed" id="removed">
         <div>
           <div class="section-header" style="text-align: left; padding-left: 0;">
               Drafted
+          </div>
+          <div>
+            <b-table :items="this.removed" :fields="this.removedColumns" @row-clicked="putBack"></b-table>
+          </div>
+        </div>
+      </div>
+      <!-- END REMOVED TABLE -->
+
+      <!-- DRAFTED TABLE -->
+      <div v-if=" this.rankings.length > 0" class="item-drafted" id="drafted">
+        <div>
+          <div class="section-header" style="text-align: left; padding-left: 0;">
+              Drafted by You
           </div>
           <div>
             <b-table :items="this.drafted" :fields="this.draftedColumns" @row-clicked="undraft"></b-table>
           </div>
         </div>
       </div>
-      <!-- END DRAFTED TABLE -->
+      <!-- END DRAFTED -->
 
-      <!-- INSTRUCTIONS -->
-      <div class="item-instructions" id="instructions">
-        <div class="section-header" style="text-align: left; padding-left: 0;">
-            Instructions
-        </div>
-        <div class="instructions-box">
-          <ul>
-            <li>Upload any rankings <i>.csv</i> file.</li>
-            <li><i>DO NOT REFRESH THE PAGE!</i>
-              <ul>
-                <li>Refreshing means starting over.</li>
-              </ul>
-            </li>
-            <li>Click on a player in the <b>Rankings</b> table to draft them.</li>
-            <li>Click on a player in the <b>Drafted</b> table to return them to Rankings.</li>
-            <li>Type a player's name or position into the Filter to search.
-              <ul>
-                <li>Filtering on 'TE' is currently wonky but, really, who cares?</li>
-              </ul>
-            </li>
-            <li>To start over, upload a new .csv file or refresh the page.</li>
-          </ul>
-        </div>
-      </div>
-      <!-- END INSTRUCTIONS -->
     </div> <!-- container -->
   </div> <!-- app -->
 </template>
@@ -111,14 +104,15 @@ export default {
     // upload button
     showUpload: true,
 
-    // tables
     // b-table :items
     rankings: [],
+    removed: [],
     drafted: [],
 
     // b-table :fields - may need extra options for styling
     // see: https://bootstrap-vue.org/docs/components/table#complete-example
     colHeaders: [], // useful for smaller drafted table and grokking sheets wih disparate formats
+    removedColumns: [],
     draftedColumns: [],
 
     // important/useful columns processing
@@ -172,6 +166,16 @@ export default {
         }
       }
 
+      // populate removed table :items var
+      // clear table in case of re-upload of same sheet (likely)
+      for (var wasRemoved in this.removed) {
+        this.removed.splice(this.removed[wasRemoved], 1)
+      }
+      this.removed.length = 0 // length is r/w. weird.
+
+      this.removedColumns.length = 0
+      this.removedColumns.push(this.colHeaders[this.nameColIndex])
+
       // populate drafted table :items var
       // clear table in case of re-upload of same sheet (likely)
       for (var draftee in this.drafted) {
@@ -184,14 +188,27 @@ export default {
       if (this.byeCol !== null) {
         this.draftedColumns.push(this.colHeaders[this.byeColIndex])
       }
+
+      // add actions
+      this.colHeaders.push('remove')
+      this.colHeaders.push('draft')
     },
     removeFromRankings (row) {
+      this.removed.splice(0, 0, row)
+      this.rankings.splice(this.rankings.indexOf(row), 1)
+    },
+    draft (row) {
+      // console.log(row)
       this.drafted.splice(0, 0, row)
       this.rankings.splice(this.rankings.indexOf(row), 1)
     },
     undraft (row) {
       this.rankings.splice(0, 0, row)
       this.drafted.splice(this.drafted.indexOf(row), 1)
+    },
+    putBack (row) {
+      this.rankings.splice(0, 0, row)
+      this.removed.splice(this.removed.indexOf(row), 1)
     }
   },
   components: {
@@ -213,9 +230,9 @@ export default {
 }
 
 /* Basic mobile styling */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 540px) {
   /* hide  instructions */
-  #instructions { display: none; }
+  #removed, #drafted { display: none; }
 }
 
 /* banner */
@@ -267,12 +284,12 @@ export default {
   grid-row-start: 2;
 }
 .item-drafted {
-  grid-column-start: 2;
-  grid-column-end: 3;
+  grid-column-start: 3;
   grid-row-start: 2;
 }
-.item-instructions {
-  grid-column-start: 3;
+.item-removed {
+  grid-column-start: 2;
+  grid-column-end: 3;
   grid-row-start: 2;
 }
 
@@ -300,41 +317,5 @@ td {
 }
 tr:hover {
   background-color: #d6d6d6;
-}
-
-/* INSTRUCTIONS */
-.item.instructions {
-  position: relative;
-}
-.instructions-box {
-  background-color: #d6d6d6;
-  border-radius: 5px;
-}
-ul {
-  margin-top: 0;
-  margin-left: 1.5em;
-  text-align: left;
-  padding: .1em .2em .1em 0em;
-}
-ul ul {
-  margin-top: 0;
-  margin-left: .6em;
-  margin-bottom: 0;
-  text-align: left;
-}
-ul li {
-  padding:.1em 0 .1em 0;
-}
-ul ul li {
-  margin-top: 0;
-  margin-left: 0;
-  margin-bottom: 0;
-  padding: 0;
-}
-li {
-  margin-top: 0;
-  margin-left: 0;
-  margin-bottom: 0;
-  padding: 0;
 }
 </style>
