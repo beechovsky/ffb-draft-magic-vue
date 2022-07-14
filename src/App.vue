@@ -33,7 +33,6 @@
                 placeholder="'QB', 'Smith', etc."
               ></b-form-input>
               <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-
             </b-input-group>
           </b-form-group>
         </div>
@@ -63,10 +62,10 @@
             :fields="this.colHeaders"
             >
             <template v-slot:cell(remove)="{ item }">
-              <span><b-button variant="primary" @click="removeFromRankings(item)">Remove</b-button></span>
+              <span><b-button @click="removeFromRankings(item)">Remove</b-button></span>
             </template>
             <template v-slot:cell(draft)="{ item }">
-              <span><b-button variant="secondary" @click="draft(item)">Draft</b-button></span>
+              <span><button variant="success" @click="draft(item)">Draft</button></span>
             </template>
           </b-table>
         </div>
@@ -206,7 +205,6 @@ export default {
       this.rankings.splice(this.rankings.indexOf(row), 1)
     },
     draft (row) {
-      // console.log(row)
       this.drafted.splice(0, 0, row)
       this.rankings.splice(this.rankings.indexOf(row), 1)
     },
