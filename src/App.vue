@@ -74,12 +74,16 @@
             :sort-by.sync="sortBy"
             :items="this.rankings"
             :fields="visibleFields"
+            bordered
+            small
+            hover
+            head-variant="light"
             >
             <template v-slot:cell(remove)="{ item }">
               <span><b-button @click="removeFromRankings(item)">Remove</b-button></span>
             </template>
             <template v-slot:cell(draft)="{ item }">
-              <span><b-button variant="success" @click="draft(item)">Draft</b-button></span>
+              <span><b-button variant="primary" @click="draft(item)">Draft</b-button></span>
             </template>
           </b-table>
         </div>
@@ -96,7 +100,13 @@
             <b-table
               :items="this.removed"
               :fields="this.removedColumns"
-              @row-clicked="putBack">
+              @row-clicked="putBack"
+              bordered
+              small
+              hover
+              head-variant="light"
+              table-variant="secondary"
+              >
              </b-table>
           </div>
         </div>
@@ -113,7 +123,13 @@
             <b-table
               :items="this.drafted"
               :fields="this.draftedColumns"
-              @row-clicked="undraft">
+              @row-clicked="undraft"
+              bordered
+              small
+              hover
+              head-variant="light"
+              table-variant="primary"
+              >
             </b-table>
           </div>
         </div>
@@ -321,7 +337,7 @@ export default {
   grid-column-end: 2;
   grid-row-start: 2;
   grid-row-end: 3;
-  font-size: small;
+  font-size: x-small;
 }
 .item-instructions {
   grid-column-start: 2;
@@ -342,27 +358,5 @@ export default {
 .item-drafted {
   grid-column-start: 3;
   grid-row-start: 3;
-}
-
-/* general table styles since b-table styling isnt working ... */
-table {
-  width: 100%;
-  background-color: #ffffff;
-}
-
-table, tr, td {
-  border: 1px solid black;
-  border-collapse: collapse;
-}
-
-th {
-  font-weight: bold;
-  background-color: #d6d6d6;
-}
-td {
-  padding: 1px 2px 1px 2px;
-}
-tr:hover {
-  background-color: #d6d6d6;
 }
 </style>
