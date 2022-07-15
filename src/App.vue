@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <section class="hero">
       <header>
         <br>
@@ -15,7 +14,7 @@
     <br>
 
     <!-- TABLES -->
-    <div class="container">
+    <div class="table-container">
       <!-- FILTERING -->
       <!-- https://bootstrap-vue.org/docs/components/table#complete-example -->
       <div class="item-filter">
@@ -24,15 +23,18 @@
             label="Filter"
             label-for="filter-input"
             class="section-header"
+            label-cols="2"
             >
-            <b-input-group>
+            <b-input-group size="sm">
               <b-form-input
                 id="filter-input"
                 v-model="filter"
                 type="search"
                 placeholder="'QB', 'Smith', etc."
               ></b-form-input>
-              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+              <b-input-group-append>
+                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+              </b-input-group-append>
             </b-input-group>
           </b-form-group>
         </div>
@@ -41,25 +43,28 @@
 
       <!-- INSTRUCTIONS -->
       <div v-if="this.rankings.length > 0" class="item-instructions" id="instructions">
-        <div class="section-header" style="text-align: center; padding-left: 0;">
+        <div class="section-header">
           Click a player below to return them to main table.
         </div>
       </div>
       <!-- END INSTRUCTIONS -->
 
       <!-- RANKINGS TABLE -->
-      <div v-if="this.rankings.length > 0" class="item-rankings" id="rankings">
-        <div class="section-header" style="text-align: left; padding-left: 0;">
-          Rankings
+      <div v-if="this.rankings.length > 0" class="item-column-toggles">
           <b-form-checkbox
+            size="sm"
             :disabled="visibleFields.length == 1 && field.visible"
             v-for="field in this.colHeaders"
             :key="field.key"
             v-model="field.visible"
             inline
           >
-            {{ field.key }}
+          {{ field.key }}
           </b-form-checkbox>
+        </div>
+      <div v-if="this.rankings.length > 0" class="item-rankings" id="rankings">
+        <div class="section-header" style="text-align: left; padding-left: 0;">
+          Rankings
         </div>
         <div>
           <b-table
@@ -74,7 +79,7 @@
               <span><b-button @click="removeFromRankings(item)">Remove</b-button></span>
             </template>
             <template v-slot:cell(draft)="{ item }">
-              <span><button @click="draft(item)">Draft</button></span>
+              <span><b-button variant="success" @click="draft(item)">Draft</b-button></span>
             </template>
           </b-table>
         </div>
@@ -297,10 +302,10 @@ export default {
 }
 
 /* grid settings*/
-.container {
+.table-container {
   display: grid;
   grid-template-columns: 2fr repeat(2, 1fr);
-  grid-template-rows: 2em repeat(3, auto); /* 3 rows: one to isolate filter above tables/instructions and one for overflow */
+  grid-template-rows: repeat(4, auto); /* 4 rows: one to isolate filter above column toggles & instructions, one for tables, and one for overflow */
   grid-gap: 1rem;
   grid-auto-flow: dense;
 }
@@ -309,34 +314,40 @@ export default {
   grid-column-end: 2;
   grid-row-start: 1;
   grid-row-end: 2;
+  justify-self: center;
+}
+.item-column-toggles {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  font-size: small;
 }
 .item-instructions {
   grid-column-start: 2;
   grid-column-end: 4;
-  grid-row-start: 1;
-  grid-row-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
 }
 .item-rankings {
   grid-column-start: 1;
   grid-column-end: 2;
-  grid-row-start: 2;
-}
-.item-drafted {
-  grid-column-start: 3;
-  grid-row-start: 2;
+  grid-row-start: 3;
 }
 .item-removed {
   grid-column-start: 2;
   grid-column-end: 3;
-  grid-row-start: 2;
+  grid-row-start: 3;
+}
+.item-drafted {
+  grid-column-start: 3;
+  grid-row-start: 3;
 }
 
 /* general table styles since b-table styling isnt working ... */
 table {
-  /* min-width: 100%; */
   width: 100%;
-  background-color: #ffffff; /* in case page bg color is different */
-  position: relative;
+  background-color: #ffffff;
 }
 
 table, tr, td {
@@ -344,11 +355,9 @@ table, tr, td {
   border-collapse: collapse;
 }
 
-th { /* may need these ahead of th: table thead  */
+th {
   font-weight: bold;
   background-color: #d6d6d6;
-  /* position: sticky;
-  top: 0; */
 }
 td {
   padding: 1px 2px 1px 2px;

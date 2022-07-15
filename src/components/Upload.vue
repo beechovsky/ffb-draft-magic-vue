@@ -97,7 +97,7 @@ export default {
   color: orange;
   border: 2px solid black;
   border-radius: 5px;
-  padding: 8px 12px;
+  padding: 8px 12px 4px 12px;
   cursor: pointer;
 }
 .upload-label:hover {
@@ -113,10 +113,10 @@ export default {
 }
 .error {
   color: red;
-  border: 1px solid red;
+  /* border: 1px solid red;
   border-radius: 2px;
   background-color: pink;
-  padding: .2em .3em .2em;
+  padding: .2em .3em .2em; */
   font-size: large;
 }
 </style>

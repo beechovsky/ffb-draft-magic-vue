@@ -6,7 +6,7 @@ import BootstrapVue from 'bootstrap-vue'
 import VuePapaParse from 'vue-papa-parse'
 
 // turning this on gives you pretty buttons, etc., but breaks current grid configuration
-// import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/css/bootstrap.css'
 
 Vue.use(BootstrapVue)
 Vue.use(VuePapaParse)
