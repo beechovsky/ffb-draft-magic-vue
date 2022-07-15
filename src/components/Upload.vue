@@ -2,7 +2,7 @@
 <div class="upload-container">
   <div class="upload-button">
     <label class='upload-label'>
-      <h1>Upload Rankings CSV</h1>
+      <h1>Upload Rankings</h1>
       <input ref='upload' type='file' @click='resetUpload' @change='getFile' required>
     </label>
     <div v-if="error" id="error">
@@ -93,16 +93,19 @@ export default {
   position: relative;
   overflow: hidden;
   display: inline-block;
-  background-color: #ffffff;
+  /* original styling; still not sure I like the new button */
+  /* background-color: #ffffff;
   color: orange;
-  border: 2px solid black;
-  border-radius: 5px;
+  border: 2px solid black; */
+  background-color: orange;
+  color: white;
+  border-radius: 6px;
   padding: 8px 12px 4px 12px;
   cursor: pointer;
 }
 .upload-label:hover {
   position: relative;
-  background-color: #d6d6d6;
+  background-color: darkorange;
 }
 .upload-button input {
   position: absolute;
