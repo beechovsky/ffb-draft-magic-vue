@@ -51,6 +51,15 @@
       <div v-if="this.rankings.length > 0" class="item-rankings" id="rankings">
         <div class="section-header" style="text-align: left; padding-left: 0;">
           Rankings
+          <b-form-checkbox
+            :disabled="visibleFields.length == 1 && field.visible"
+            v-for="field in this.colHeaders"
+            :key="field.key"
+            v-model="field.visible"
+            inline
+          >
+            {{ field.key }}
+          </b-form-checkbox>
         </div>
         <div>
           <b-table
@@ -59,13 +68,13 @@
             :sort-direction="sortDirection"
             :sort-by.sync="sortBy"
             :items="this.rankings"
-            :fields="this.colHeaders"
+            :fields="visibleFields"
             >
             <template v-slot:cell(remove)="{ item }">
               <span><b-button @click="removeFromRankings(item)">Remove</b-button></span>
             </template>
             <template v-slot:cell(draft)="{ item }">
-              <span><button variant="success" @click="draft(item)">Draft</button></span>
+              <span><button @click="draft(item)">Draft</button></span>
             </template>
           </b-table>
         </div>
@@ -115,6 +124,11 @@ import Upload from './components/Upload'
 
 export default {
   name: 'app',
+  computed: {
+    visibleFields () {
+      return this.colHeaders.filter(field => field.visible)
+    }
+  },
   data: () => ({
     // upload button
     showUpload: true,
@@ -155,28 +169,32 @@ export default {
       this.rankings = rows
 
       // for b-table :fields and for determining rank, name, and position fields, upon which we'll operate
-      this.colHeaders = Object.keys(this.rankings[0])
+      // this.colHeaders = Object.keys(this.rankings[0])
+      for (var header in Object.keys(this.rankings[0])) {
+        this.colHeaders.push({ key: Object.keys(this.rankings[0])[header], visible: true })
+      }
+
       // determine rank and name columns
       for (var idx in this.colHeaders) {
         // rank
-        if (this.rankColNames.includes(this.colHeaders[idx].toLowerCase())) {
-          this.sortBy = this.colHeaders[idx] // sort by overall rank
+        if (this.rankColNames.includes(this.colHeaders[idx].key.toLowerCase())) {
+          this.sortBy = this.colHeaders[idx].key // sort by overall rank
         }
 
         // name
-        if (this.nameColNames.includes(this.colHeaders[idx].toLowerCase())) {
-          this.nameCol = this.colHeaders[idx]
+        if (this.nameColNames.includes(this.colHeaders[idx].key.toLowerCase())) {
+          this.nameCol = this.colHeaders[idx].key
           this.nameColIndex = idx
         }
 
         // position
-        if (this.posColNames.includes(this.colHeaders[idx].toLowerCase())) {
-          this.posCol = this.colHeaders[idx]
+        if (this.posColNames.includes(this.colHeaders[idx].key.toLowerCase())) {
+          this.posCol = this.colHeaders[idx].key
         }
 
         // bye
-        if (this.colHeaders[idx].toLowerCase() === 'bye') {
-          this.byeCol = this.colHeaders[idx]
+        if (this.colHeaders[idx].key.toLowerCase() === 'bye') {
+          this.byeCol = this.colHeaders[idx].key
           this.byeColIndex = idx
         }
       }
@@ -205,8 +223,8 @@ export default {
       }
 
       // add actions
-      this.colHeaders.push('remove')
-      this.colHeaders.push('draft')
+      this.colHeaders.push({ key: 'REMOVE', visible: true })
+      this.colHeaders.push({ key: 'DRAFT', visible: true })
     },
     removeFromRankings (row) {
       this.removed.splice(0, 0, row)
