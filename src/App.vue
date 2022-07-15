@@ -79,6 +79,9 @@
             hover
             head-variant="light"
             >
+            <template #head()="data">
+              <span class="custom-header">{{ data.label.toUpperCase() }}</span>
+            </template>
             <template v-slot:cell(remove)="{ item }">
               <span><b-button @click="removeFromRankings(item)">Remove</b-button></span>
             </template>
@@ -107,6 +110,9 @@
               head-variant="light"
               table-variant="secondary"
               >
+              <template #head()="data">
+                <span class="custom-header">{{ data.label.toUpperCase() }}</span>
+              </template>
              </b-table>
           </div>
         </div>
@@ -130,6 +136,9 @@
               head-variant="light"
               table-variant="primary"
               >
+              <template #head()="data">
+                <span class="custom-header">{{ data.label.toUpperCase() }}</span>
+              </template>
             </b-table>
           </div>
         </div>
@@ -305,6 +314,10 @@ export default {
   color: #fff;
   text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
   font-size: xxx-large;
+}
+
+.custom-header {
+  font-size: small;
 }
 
 /* for headers and labels */
