@@ -1,11 +1,9 @@
 <template>
   <div id="app">
     <section class="hero">
-      <header>
-        <br>
+      <br>
         <h1><b>FFB DraftMagic</b></h1>
-        <br>
-      </header>
+      <br>
     </section>
 
     <!-- UPLOAD BUTTON -->
@@ -291,37 +289,16 @@ export default {
   cursor: pointer;
 }
 
-/* mobile styling */
-/* @media screen and (max-width: 540px) {
-  #removed, #drafted, #instructions { display: none; }
-} */
-
-/* mobile styling */
-@media only screen and (max-width: 340px) {
-  .item-instructions {
-    display: none;
-  }
-  .item-removed {
-    display: none;
-  }
-  .item-drafted {
-    display: none;
-  }
-}
-
 /* banner */
 .hero {
-  height: auto;
-  width: 100%;
+  height: auto; /* as tall as elements within section */
+  min-width: 100%;
   background: url(assets/ffb-banner.jpg) center;
   background-size: cover;
   background-repeat: no-repeat;
   /* for non h1 text */
   color: white;
-
-  display: grid;
   align-items: center;
-  /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
 }
 
 .hero h1 {
@@ -347,8 +324,9 @@ export default {
 /* grid settings*/
 .table-container {
   display: grid;
-  grid-template-columns: 2fr repeat(2, 1fr);
-  grid-template-rows: repeat(4, auto); /* 4 rows: one to isolate filter above column toggles & instructions, one for tables, and one for overflow */
+  /* grid-template-columns: 2fr repeat(2, 1fr); */
+  grid-template-columns: 2fr repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-rows: repeat(3, auto); /* 3 rows: filter, column toggles & instructions, tables*/
   grid-gap: 1rem;
   grid-auto-flow: dense;
 }
