@@ -1,5 +1,4 @@
 <template>
-<div class="upload-container">
   <div class="upload-button">
     <label class='upload-label'>
       <h1>Upload Rankings</h1>
@@ -9,7 +8,6 @@
       <p><span class="error">{{errorMsg}}</span></p>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -79,16 +77,6 @@ export default {
 </script>
 
 <style>
-.upload-container {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  grid-template-rows: 1;
-}
-.upload-button {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 1;
-}
 .upload-label {
   position: relative;
   overflow: hidden;

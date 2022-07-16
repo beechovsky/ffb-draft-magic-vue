@@ -1,41 +1,39 @@
 <template>
   <div id="app">
-    <section class="hero">
-      <br>
-        <h1><b>FFB DraftMagic</b></h1>
-      <br>
-    </section>
+    <div class="container">
+      <section class="hero">
+        <br>
+          <h1><b>FFB DraftMagic</b></h1>
+        <br>
+      </section>
 
-    <!-- UPLOAD BUTTON -->
-    <br>
-    <upload v-if="this.showUpload === true" @load="setRows" id="uploadButton" class="visible"></upload>
-    <br>
+      <!-- UPLOAD BUTTON -->
+      <div class="upload-container">
+        <upload v-if="this.showUpload === true" @load="setRows" id="uploadButton" class="visible"></upload>
+      </div>
 
-    <!-- TABLES -->
-    <div class="table-container">
+      <!-- TABLES -->
       <!-- FILTERING -->
       <!-- https://bootstrap-vue.org/docs/components/table#complete-example -->
-      <div class="item-filter">
-        <div v-if="this.rankings.length > 0">
-          <b-form-group
-            label="Filter"
-            label-for="filter-input"
-            class="section-header"
-            label-cols="2"
-            >
-            <b-input-group size="sm">
-              <b-form-input
-                id="filter-input"
-                v-model="filter"
-                type="search"
-                placeholder="'QB', 'Smith', etc."
-              ></b-form-input>
-              <b-input-group-append>
-                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-        </div>
+      <div v-if="this.rankings.length > 0" class="item-filter">
+        <b-form-group
+          label="Filter"
+          label-for="filter-input"
+          class="section-header"
+          label-cols="2"
+          >
+          <b-input-group size="sm">
+            <b-form-input
+              id="filter-input"
+              v-model="filter"
+              type="search"
+              placeholder="'QB', 'Smith', etc."
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </b-form-group>
       </div>
       <!-- END FILTERING -->
 
@@ -142,7 +140,6 @@
         </div>
       </div>
       <!-- END DRAFTED -->
-
     </div> <!-- container -->
   </div> <!-- app -->
 </template>
@@ -278,6 +275,7 @@ export default {
 </script>
 
 <style>
+/* not great, but works */
 @media only screen and (max-width: 720px) {
   .item-instructions, .item-drafted, .item-removed {
     display: none;
@@ -291,20 +289,32 @@ export default {
   text-align: center;
 }
 
-.clickable {
-  cursor: pointer;
+* {
+  padding: 0;
+  margin: 0;
 }
 
-/* banner */
+/* grid settings*/
+.container {
+  display: grid;
+  grid-template-columns: 2fr repeat(2, 1fr);
+  grid-template-rows: repeat(5, auto); /* 5 rows: header, button, filter, column toggles & instructions, tables */
+  grid-gap: 1rem;
+  grid-auto-flow: dense;
+}
+
 .hero {
-  height: auto; /* as tall as elements within section */
-  min-width: 100%;
+  /* height: auto; */
+  /* min-width: 100%; */
   background: url(assets/ffb-banner.jpg) center;
   background-size: cover;
   background-repeat: no-repeat;
   /* for non h1 text */
   color: white;
   align-items: center;
+
+  grid-row: 1 / 1;
+  grid-column: 1 / -1;
 }
 
 .hero h1 {
@@ -313,11 +323,53 @@ export default {
   font-size: xxx-large;
 }
 
-/* decrease table header font size */
-.custom-header {
-  font-size: small;
+.upload-container {
+  grid-row: 2 / 2;
+  grid-column: 1 / -1;
 }
 
+.item-filter {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  justify-self: center;
+}
+
+.item-column-toggles {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 4;
+  grid-row-end: 5;
+  font-size: x-small;
+  justify-self: center;
+}
+
+.item-rankings {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 5;
+}
+
+.item-instructions {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  grid-row-start: 4;
+  grid-row-end: 5;
+}
+
+.item-removed {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 5;
+}
+
+.item-drafted {
+  grid-column-start: 3;
+  grid-row-start: 5;
+}
+
+/* misc. */
 /* for table captions and labels */
 .section-header {
   border: none;
@@ -328,47 +380,12 @@ export default {
   background-color: #ffffff;
 }
 
-/* grid settings*/
-.table-container {
-  display: grid;
-  /* grid-template-columns: 2fr repeat(2, 1fr); */
-  grid-template-columns: 2fr repeat(auto-fit, minmax(412px, 1fr));
-  grid-template-rows: repeat(3, auto); /* 3 rows: filter, column toggles & instructions, tables*/
-  grid-gap: 1rem;
-  grid-auto-flow: dense;
+/* decrease table header font size */
+.custom-header {
+  font-size: small;
 }
-.item-filter {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 1;
-  grid-row-end: 2;
-  justify-self: center;
-}
-.item-column-toggles {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 2;
-  grid-row-end: 3;
-  font-size: x-small;
-}
-.item-rankings {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 3;
-}
-.item-instructions {
-  grid-column-start: 2;
-  grid-column-end: 4;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
-.item-removed {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 3;
-}
-.item-drafted {
-  grid-column-start: 3;
-  grid-row-start: 3;
+
+.clickable {
+  cursor: pointer;
 }
 </style>
