@@ -278,6 +278,12 @@ export default {
 </script>
 
 <style>
+@media only screen and (max-width: 720px) {
+  .item-instructions, .item-drafted, .item-removed {
+    display: none;
+  }
+}
+
 #app {
   font-family: "Ubuntu", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -307,11 +313,12 @@ export default {
   font-size: xxx-large;
 }
 
+/* decrease table header font size */
 .custom-header {
   font-size: small;
 }
 
-/* for headers and labels */
+/* for table captions and labels */
 .section-header {
   border: none;
   padding: 0 0 0 5px;
@@ -325,7 +332,7 @@ export default {
 .table-container {
   display: grid;
   /* grid-template-columns: 2fr repeat(2, 1fr); */
-  grid-template-columns: 2fr repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: 2fr repeat(auto-fit, minmax(412px, 1fr));
   grid-template-rows: repeat(3, auto); /* 3 rows: filter, column toggles & instructions, tables*/
   grid-gap: 1rem;
   grid-auto-flow: dense;
