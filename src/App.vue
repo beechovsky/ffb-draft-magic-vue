@@ -275,10 +275,15 @@ export default {
 </script>
 
 <style>
-/* not great, but works */
+/* not 'mobile-first', but works */
 @media only screen and (max-width: 720px) {
+  /* hide child columns */
   .item-instructions, .item-drafted, .item-removed {
     display: none;
+  }
+  /* allow grid to scrunch towards center */
+  .container {
+    min-width: none;
   }
 }
 
@@ -296,6 +301,7 @@ export default {
   grid-template-rows: repeat(5, auto); /* 5 rows: header, button, filter, column toggles & instructions, tables */
   grid-gap: 1rem;
   grid-auto-flow: dense;
+  min-width: 100vw;
 }
 
 .hero {
