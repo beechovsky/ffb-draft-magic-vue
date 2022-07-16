@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <div class="container">
-      <section class="hero">
+      <div class="hero">
         <br>
           <h1><b>FFB DraftMagic</b></h1>
         <br>
-      </section>
+      </div>
 
       <!-- UPLOAD BUTTON -->
       <div class="upload-container">
@@ -13,39 +13,39 @@
       </div>
 
       <!-- TABLES -->
-      <!-- FILTERING -->
-      <!-- https://bootstrap-vue.org/docs/components/table#complete-example -->
+        <!-- FILTERING -->
+        <!-- https://bootstrap-vue.org/docs/components/table#complete-example -->
       <div v-if="this.rankings.length > 0" class="item-filter">
-        <b-form-group
-          label="Filter"
-          label-for="filter-input"
-          class="section-header"
-          label-cols="2"
-          >
-          <b-input-group size="sm">
-            <b-form-input
-              id="filter-input"
-              v-model="filter"
-              type="search"
-              placeholder="'QB', 'Smith', etc."
-            ></b-form-input>
-            <b-input-group-append>
-              <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
-            </b-input-group-append>
-          </b-input-group>
-        </b-form-group>
-      </div>
-      <!-- END FILTERING -->
-
-      <!-- INSTRUCTIONS -->
-      <div v-if="this.rankings.length > 0" class="item-instructions" id="instructions">
-        <div class="section-header">
-          Click a player below to return them to main table.
+          <b-form-group
+            label="Filter"
+            label-for="filter-input"
+            class="section-header"
+            label-cols="2"
+            >
+            <b-input-group size="sm">
+              <b-form-input
+                id="filter-input"
+                v-model="filter"
+                type="search"
+                placeholder="'QB', 'Smith', etc."
+              ></b-form-input>
+              <b-input-group-append>
+                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
         </div>
-      </div>
-      <!-- END INSTRUCTIONS -->
+        <!-- END FILTERING -->
 
-      <!-- RANKINGS TABLE -->
+        <!-- INSTRUCTIONS -->
+      <div v-if="this.rankings.length > 0" class="item-instructions" id="instructions">
+          <div class="section-header">
+          Click a player below to return them to main table.
+          </div>
+        </div>
+        <!-- END INSTRUCTIONS -->
+
+        <!-- RANKINGS TABLE -->
       <div v-if="this.rankings.length > 0" class="item-column-toggles">
           <b-form-checkbox
             size="sm"
@@ -55,41 +55,41 @@
             v-model="field.visible"
             inline
           >
-          {{ field.key }}
+            {{ field.key }}
           </b-form-checkbox>
         </div>
       <div v-if="this.rankings.length > 0" class="item-rankings" id="rankings">
-        <div class="section-header" style="text-align: left; padding-left: 0;">
-          Rankings
+          <div class="section-header" style="text-align: left; padding-left: 0;">
+            Rankings
+          </div>
+          <div>
+            <b-table
+              :filter="filter"
+              :filter-included-fields="filterOn"
+              :sort-direction="sortDirection"
+              :sort-by.sync="sortBy"
+              :items="this.rankings"
+              :fields="visibleFields"
+              bordered
+              small
+              hover
+              head-variant="light"
+              >
+              <template #head()="data">
+                <span class="custom-header">{{ data.label.toUpperCase() }}</span>
+              </template>
+              <template v-slot:cell(remove)="{ item }">
+                <span><b-button @click="removeFromRankings(item)">Remove</b-button></span>
+              </template>
+              <template v-slot:cell(draft)="{ item }">
+                <span><b-button variant="primary" @click="draft(item)">Draft</b-button></span>
+              </template>
+            </b-table>
+          </div>
         </div>
-        <div>
-          <b-table
-            :filter="filter"
-            :filter-included-fields="filterOn"
-            :sort-direction="sortDirection"
-            :sort-by.sync="sortBy"
-            :items="this.rankings"
-            :fields="visibleFields"
-            bordered
-            small
-            hover
-            head-variant="light"
-            >
-            <template #head()="data">
-              <span class="custom-header">{{ data.label.toUpperCase() }}</span>
-            </template>
-            <template v-slot:cell(remove)="{ item }">
-              <span><b-button @click="removeFromRankings(item)">Remove</b-button></span>
-            </template>
-            <template v-slot:cell(draft)="{ item }">
-              <span><b-button variant="primary" @click="draft(item)">Draft</b-button></span>
-            </template>
-          </b-table>
-        </div>
-      </div>
-      <!-- END RANKINGS TABLE -->
+        <!-- END RANKINGS TABLE -->
 
-      <!-- REMOVED TABLE -->
+        <!-- REMOVED TABLE -->
       <div v-if="this.rankings.length > 0" class="item-removed" id="removed">
         <div>
           <div class="section-header" style="text-align: left; padding-left: 0;">
@@ -109,13 +109,13 @@
               <template #head()="data">
                 <span class="custom-header">{{ data.label.toUpperCase() }}</span>
               </template>
-             </b-table>
+            </b-table>
           </div>
         </div>
       </div>
-      <!-- END REMOVED TABLE -->
+        <!-- END REMOVED TABLE -->
 
-      <!-- DRAFTED TABLE -->
+        <!-- DRAFTED TABLE -->
       <div v-if=" this.rankings.length > 0" class="item-drafted" id="drafted">
         <div>
           <div class="section-header" style="text-align: left; padding-left: 0;">
@@ -139,7 +139,7 @@
           </div>
         </div>
       </div>
-      <!-- END DRAFTED -->
+        <!-- END DRAFTED -->
     </div> <!-- container -->
   </div> <!-- app -->
 </template>
@@ -287,11 +287,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-}
-
-* {
-  padding: 0;
-  margin: 0;
 }
 
 /* grid settings*/
