@@ -274,7 +274,7 @@ export default {
 
 <style>
 /* not 'mobile-first', but works */
-@media only screen and (max-width: 720px) {
+@media only screen and (max-width: 900px) {
   /* hide child columns */
   .item-instructions, .item-drafted, .item-removed {
     display: none;
