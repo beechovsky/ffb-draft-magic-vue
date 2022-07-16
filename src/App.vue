@@ -2,9 +2,7 @@
   <div id="app">
     <div class="container">
       <div class="hero">
-        <br>
-          <h1><b>FFB DraftMagic</b></h1>
-        <br>
+        <h1><b>FFB DraftMagic</b></h1>
       </div>
 
       <!-- UPLOAD BUTTON -->
@@ -316,12 +314,15 @@ export default {
 
   grid-row: 1 / 1;
   grid-column: 1 / -1;
+  justify-items: center;
+  align-items: center;
 }
 
 .hero h1 {
   color: #fff;
   text-shadow: 0px 1px 0px #999, 0px 2px 0px #888, 0px 3px 0px #777, 0px 4px 0px #666, 0px 5px 0px #555, 0px 6px 0px #444, 0px 7px 0px #333, 0px 8px 7px #001135;
   font-size: xxx-large;
+  padding: .5vh;
 }
 
 .upload-container {
