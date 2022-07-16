@@ -185,8 +185,8 @@ export default {
   }),
   methods: {
     setRows (rows) {
-      // hide the upload button - currently disbled to allow restart w/o refreshing page, and to keep elements from "jumping"
-      // this.showUpload = false
+      // hide the upload button
+      this.showUpload = false
 
       // set wider-scoped var for populating main rankings table
       this.rankings = rows
