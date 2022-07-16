@@ -296,29 +296,23 @@ export default {
   #removed, #drafted, #instructions { display: none; }
 } */
 
-/* mobile-first styling */
-@media only screen and (min-width: 412px) {
+/* mobile styling */
+@media only screen and (max-width: 340px) {
   .item-instructions {
-    grid-column-start: 2;
-    grid-column-end: 4;
-    grid-row-start: 2;
-    grid-row-end: 3;
+    display: none;
   }
   .item-removed {
-    grid-column-start: 2;
-    grid-column-end: 3;
-    grid-row-start: 3;
+    display: none;
   }
   .item-drafted {
-    grid-column-start: 3;
-    grid-row-start: 3;
+    display: none;
   }
 }
 
 /* banner */
 .hero {
   height: auto;
-  max-width: 100%;
+  width: 100%;
   background: url(assets/ffb-banner.jpg) center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -377,13 +371,19 @@ export default {
   grid-column-end: 2;
   grid-row-start: 3;
 }
-/* .item-instructions {
-  display: none;
+.item-instructions {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 3;
 }
 .item-removed {
-  display: none;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 3;
 }
 .item-drafted {
-  display: none;
-} */
+  grid-column-start: 3;
+  grid-row-start: 3;
+}
 </style>

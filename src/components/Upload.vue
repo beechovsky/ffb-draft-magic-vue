@@ -93,7 +93,7 @@ export default {
   position: relative;
   overflow: hidden;
   display: inline-block;
-  /* original styling; still not sure I like the new button */
+  /* original styling; still not sure I like the new button yet */
   /* background-color: #ffffff;
   color: orange;
   border: 2px solid black; */
