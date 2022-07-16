@@ -291,23 +291,43 @@ export default {
   cursor: pointer;
 }
 
-/* Basic mobile styling */
-@media screen and (max-width: 540px) {
-  /* hide  secondary tables on mobile */
+/* mobile styling */
+/* @media screen and (max-width: 540px) {
   #removed, #drafted, #instructions { display: none; }
+} */
+
+/* mobile-first styling */
+@media only screen and (min-width: 412px) {
+  .item-instructions {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
+  }
+  .item-removed {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 3;
+  }
+  .item-drafted {
+    grid-column-start: 3;
+    grid-row-start: 3;
+  }
 }
 
 /* banner */
 .hero {
   height: auto;
+  max-width: 100%;
   background: url(assets/ffb-banner.jpg) center;
   background-size: cover;
+  background-repeat: no-repeat;
   /* for non h1 text */
   color: white;
 
   display: grid;
   align-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  /* grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
 }
 
 .hero h1 {
@@ -352,24 +372,18 @@ export default {
   grid-row-end: 3;
   font-size: x-small;
 }
-.item-instructions {
-  grid-column-start: 2;
-  grid-column-end: 4;
-  grid-row-start: 2;
-  grid-row-end: 3;
-}
 .item-rankings {
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 3;
 }
+/* .item-instructions {
+  display: none;
+}
 .item-removed {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  grid-row-start: 3;
+  display: none;
 }
 .item-drafted {
-  grid-column-start: 3;
-  grid-row-start: 3;
-}
+  display: none;
+} */
 </style>
