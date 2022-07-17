@@ -48,7 +48,7 @@
           <b-form-checkbox
             size="sm"
             :disabled="visibleFields.length == 1 && field.visible"
-            v-for="field in this.colHeaders"
+            v-for="field in this.colHeaders.slice(0, -2)"
             :key="field.key"
             v-model="field.visible"
             inline
