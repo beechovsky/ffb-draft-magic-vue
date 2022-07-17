@@ -58,7 +58,7 @@
         </div>
       <div v-if="this.rankings.length > 0" class="item-rankings" id="rankings">
           <div class="section-header" style="text-align: left; padding-left: 0;">
-            Rankings
+            Rankings <span class="team-composition">Team Composition:&nbsp;&nbsp;RB: {{this.rbs}} WR: {{this.wrs}} QB: {{this.qbs}} TE: {{this.tes}}</span>
           </div>
           <div>
             <b-table
@@ -161,6 +161,12 @@ export default {
     removed: [],
     drafted: [],
 
+    // team composition
+    rbs: 0,
+    wrs: 0,
+    qbs: 0,
+    tes: 0,
+
     // b-table :fields - may need extra options for styling
     // see: https://bootstrap-vue.org/docs/components/table#complete-example
     colHeaders: [], // useful for smaller drafted table and grokking sheets wih disparate formats
@@ -171,6 +177,7 @@ export default {
     nameCol: null, // used in filter
     nameColIndex: null,
     posCol: null, // used in filter
+    posColIndex: null, // used in team compostion calc.
     byeCol: null,
     byeColIndex: null,
     rankColNames: ['ranking', 'rank', 'rk', 'rk.', 'overall', 'ovr', 'ovr.', 'player rank', 'player.rank'],
@@ -213,6 +220,7 @@ export default {
         // position
         if (this.posColNames.includes(this.colHeaders[idx].key.toLowerCase())) {
           this.posCol = this.colHeaders[idx].key
+          this.posColIndex = idx
         }
 
         // bye
@@ -254,6 +262,23 @@ export default {
       this.rankings.splice(this.rankings.indexOf(row), 1)
     },
     draft (row) {
+      // update tallies
+      switch (Object.values(row)[this.posColIndex].substring(0, 2).toLowerCase()) {
+        case 'rb':
+          this.rbs += 1
+          break
+        case 'wr':
+          this.wrs += 1
+          break
+        case 'qb':
+          this.qbs += 1
+          break
+        case 'te':
+          this.tes += 1
+          break
+        default:
+          // pass through
+      }
       this.drafted.splice(0, 0, row)
       this.rankings.splice(this.rankings.indexOf(row), 1)
     },
@@ -380,6 +405,11 @@ export default {
   color: black;
   font-weight: bold;
   background-color: #ffffff;
+}
+
+.team-composition {
+  font-weight: normal;
+  padding-left: 10vw;
 }
 
 /* decrease table header font size */
