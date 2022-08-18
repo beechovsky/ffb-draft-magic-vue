@@ -58,7 +58,7 @@
         </div>
       <div v-if="this.rankings.length > 0" class="item-rankings" id="rankings">
           <div class="section-header" style="text-align: left; padding-left: 0;">
-            Rankings <span class="team-composition">Team Composition:&nbsp;&nbsp;RB: {{this.rbs}} WR: {{this.wrs}} QB: {{this.qbs}} TE: {{this.tes}}</span>
+            Rankings <span class="team-composition">Team Composition:&nbsp;&nbsp;RB: {{this.rbs}} / WR: {{this.wrs}} / QB: {{this.qbs}} / TE: {{this.tes}}</span>
           </div>
           <div>
             <b-table
@@ -408,7 +408,7 @@ export default {
 }
 
 .team-composition {
-  font-weight: normal;
+  font-weight: bold;
   padding-left: 10vw;
 }
 
