@@ -283,6 +283,23 @@ export default {
       this.rankings.splice(this.rankings.indexOf(row), 1)
     },
     undraft (row) {
+      // update tallies
+      switch (Object.values(row)[this.posColIndex].substring(0, 2).toLowerCase()) {
+        case 'rb':
+          this.rbs -= 1
+          break
+        case 'wr':
+          this.wrs -= 1
+          break
+        case 'qb':
+          this.qbs -= 1
+          break
+        case 'te':
+          this.tes -= 1
+          break
+        default:
+          // pass through
+      }
       this.rankings.splice(0, 0, row)
       this.drafted.splice(this.drafted.indexOf(row), 1)
     },
